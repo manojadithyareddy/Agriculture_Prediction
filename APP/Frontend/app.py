@@ -1357,6 +1357,8 @@ elif page == "🔬  Predictions":
 
             t_eval = result.get("target_crop_eval")
             if t_eval:
+                t_risk = t_eval.get("climate_risk", "").lower()
+                risk_badge_html = f'<span class="risk-badge risk-{t_risk}" style="font-size:0.7rem; padding:3px 8px; border-radius:12px; margin-left:6px;">RISK: {t_risk.upper()}</span>' if t_risk else ''
                 st.markdown(f"""
                 <div class="glass-card" style="border-left:4px solid #3498db; margin-top:0.8rem; padding:0.9rem 1.2rem;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -1367,7 +1369,7 @@ elif page == "🔬  Predictions":
                         <div style="text-align:right;">
                             <span style="background:rgba(52,152,219,0.2); color:#3498db; padding:4px 10px; border-radius:16px; font-weight:700; font-size:0.75rem; border:1px solid rgba(52,152,219,0.4);">
                                 Suitability: {t_eval['suitability']} (Rank #{t_eval['rank']})
-                            </span>
+                            </span>{risk_badge_html}
                             <div style="font-size:0.75rem; color:rgba(255,255,255,0.5); margin-top:4px;">
                                 Model Confidence: {t_eval['confidence']*100:.1f}%
                             </div>
@@ -1377,10 +1379,23 @@ elif page == "🔬  Predictions":
                 """, unsafe_allow_html=True)
 
             if result.get("top_5"):
-                st.markdown('<div class="section-header" style="margin: 1.2rem 0 0.8rem;">🌾 Top 5 Crops</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-header" style="margin: 1.2rem 0 0.8rem;">🌾 Top 5 Crops & Climate Risk Predictions</div>', unsafe_allow_html=True)
                 for i, c in enumerate(result["top_5"], 1):
                     pct = c["confidence"] * 100
-                    st.markdown(f'<div style="font-size: 1.1rem; font-weight: 600; color: #d4f0de; margin: 0.7rem 0 0.25rem;">{i}. {get_crop_icon(c["crop"])} {c["crop"].title()} — <span style="color: #2ecc71; font-weight: 700;">{pct:.1f}%</span></div>', unsafe_allow_html=True)
+                    c_risk = c.get("climate_risk", "low").lower()
+                    risk_badge = f'<span class="risk-badge risk-{c_risk}" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">RISK: {c_risk.upper()}</span>'
+                    warning_flag = ' <span style="color:#e74c3c; font-size:0.85rem; font-weight:700;">⚠️ HIGH RISK</span>' if c_risk in ['high', 'extreme'] else ''
+                    
+                    st.markdown(f'''
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin: 0.7rem 0 0.25rem;">
+                        <div style="font-size: 1.05rem; font-weight: 600; color: #d4f0de;">
+                            {i}. {get_crop_icon(c["crop"])} {c["crop"].title()} — <span style="color: #2ecc71; font-weight: 700;">{pct:.1f}%</span>{warning_flag}
+                        </div>
+                        <div>
+                            {risk_badge}
+                        </div>
+                    </div>
+                    ''', unsafe_allow_html=True)
                     st.progress(int(pct))
 
             with st.expander("📋 Inputs used for prediction"):
@@ -1419,6 +1434,22 @@ elif page == "🔬  Predictions":
                 yield_res, _ = call_api("/predict/yield",          {"location": location, "crop": selected_farm_plan_crop, "area": 1.0})
                 irr_res, _   = call_api("/predict/irrigation",     {"location": location, "crop": selected_farm_plan_crop, "growth_stage": "Initial"})
                 market_res, _ = call_api("/predict/market-price",  {"location": location, "commodity": selected_farm_plan_crop, "arrival_quantity": 100.0})
+
+            if risk_res and risk_res.get("climate_risk", "").lower() in ["high", "extreme"]:
+                r_lvl = risk_res.get("climate_risk", "HIGH").upper()
+                st.markdown(f"""
+                <div class="glass-card" style="border-left:5px solid #e74c3c; background:rgba(231,76,60,0.12); padding:1rem 1.2rem; margin:0.8rem 0; border-radius:8px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:1.5rem;">⚠️</span>
+                        <div>
+                            <h4 style="color:#e74c3c; margin:0; font-size:1rem; font-weight:700;">Climate Risk Warning for {selected_farm_plan_crop.title()} ({r_lvl} RISK)</h4>
+                            <p style="color:rgba(255,255,255,0.85); font-size:0.85rem; margin:3px 0 0 0;">
+                                Weather prediction for <strong>{location}</strong> indicates elevated climate stress for {selected_farm_plan_crop.title()}. High temperatures or rainfall imbalance may reduce yield. Ensure adequate irrigation and pest monitoring.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
 
             cA, cB = st.columns(2)
             with cA:

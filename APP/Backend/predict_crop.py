@@ -171,6 +171,29 @@ def predict_crop(location: str, crop: str = None, phosphorus: float = None, pota
             "suitability": "High" if (matched_rank and matched_rank <= 3) else ("Moderate" if (matched_rank and matched_rank <= 7) else "Low")
         }
 
+    # Enrich top_5 crops with climate risk prediction
+    try:
+        from predict_climate_risk import predict_climate_risk
+        for item in top5:
+            try:
+                c_risk_res = predict_climate_risk(location, item["crop"])
+                item["climate_risk"] = c_risk_res.get("climate_risk", "low")
+                item["risk_score"] = c_risk_res.get("risk_score", 0.0)
+            except Exception:
+                item["climate_risk"] = "unknown"
+                item["risk_score"] = 0.0
+
+        if target_crop_eval:
+            try:
+                t_risk_res = predict_climate_risk(location, target_crop_eval["requested_crop"])
+                target_crop_eval["climate_risk"] = t_risk_res.get("climate_risk", "low")
+                target_crop_eval["risk_score"] = t_risk_res.get("risk_score", 0.0)
+            except Exception:
+                target_crop_eval["climate_risk"] = "unknown"
+                target_crop_eval["risk_score"] = 0.0
+    except Exception:
+        pass
+
     res = {
         "location":         w["location"],
         "date":             w["date"],
