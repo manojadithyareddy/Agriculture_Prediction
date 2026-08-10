@@ -27,3 +27,38 @@ def get_client():
     from supabase import create_client  # imported lazily so tests don't need the library
     _client = create_client(SUPABASE_URL, SUPABASE_KEY)
     return _client
+
+
+import threading
+import logging
+
+def _perform_supabase_insert(payload: dict):
+    try:
+        client = get_client()
+        client.table("prediction_logs").insert(payload).execute()
+    except Exception as e:
+        logging.warning(f"Supabase auto-save skipped/failed: {e}")
+
+def save_prediction_to_supabase(
+    prediction_type: str,
+    location: str | None = None,
+    crop: str | None = None,
+    inputs: dict | None = None,
+    results: dict | None = None,
+    model_source: str | None = None
+):
+    """
+    Save a prediction event to Supabase `prediction_logs` asynchronously in a background thread.
+    Will never block or throw an exception to the caller.
+    """
+    payload = {
+        "prediction_type": prediction_type,
+        "location": location,
+        "crop": crop,
+        "inputs": inputs or {},
+        "results": results or {},
+        "model_source": model_source
+    }
+    thread = threading.Thread(target=_perform_supabase_insert, args=(payload,), daemon=True)
+    thread.start()
+

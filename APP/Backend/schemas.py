@@ -35,3 +35,10 @@ class MarketInput(BaseModel):
     commodity: str
     arrival_quantity: Optional[float] = None
     predict_date: Optional[str] = None      # ISO date string "YYYY-MM-DD" (None = today)
+
+
+class UserCreate(BaseModel):
+    email: str
+    password: str
+    full_name: Optional[str] = None
+

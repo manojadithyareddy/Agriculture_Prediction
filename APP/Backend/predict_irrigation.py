@@ -144,12 +144,25 @@ def predict_irrigation(location: str, crop: str, growth_stage: str = "Developmen
                 df = pd.concat([df.reset_index(drop=True), enc_df], axis=1)
             df = df.reindex(columns=FEATURE_ORDER, fill_value=0)
             prediction = float(model.predict(df)[0])
-            return {
+            res = {
                 "location": w["location"], "date": w["date"],
                 "crop": crop, "growth_stage": growth_stage,
                 "predicted_water_requirement_mm_per_day": round(prediction, 2),
                 "model_source": "pickle",
             }
+            try:
+                from database import save_prediction_to_supabase
+                save_prediction_to_supabase(
+                    prediction_type="irrigation",
+                    location=res["location"],
+                    crop=crop,
+                    inputs={"location": location, "crop": crop, "growth_stage": growth_stage},
+                    results={"water_req_mm_per_day": res["predicted_water_requirement_mm_per_day"]},
+                    model_source="pickle"
+                )
+            except Exception:
+                pass
+            return res
         except Exception:
             pass  # fall through to FAO fallback
 
@@ -189,7 +202,7 @@ def predict_irrigation(location: str, crop: str, growth_stage: str = "Developmen
 
     final_req = round(net_irrigation * soil_correction, 2)
 
-    return {
+    res = {
         "location": w["location"], "date": w["date"],
         "crop": crop, "growth_stage": growth_stage,
         "predicted_water_requirement_mm_per_day": final_req,
@@ -202,3 +215,16 @@ def predict_irrigation(location: str, crop: str, growth_stage: str = "Developmen
             "net_irrigation": round(net_irrigation, 2),
         },
     }
+    try:
+        from database import save_prediction_to_supabase
+        save_prediction_to_supabase(
+            prediction_type="irrigation",
+            location=res["location"],
+            crop=crop,
+            inputs={"location": location, "crop": crop, "growth_stage": growth_stage},
+            results={"water_req_mm_per_day": final_req},
+            model_source="fao56_penman_monteith"
+        )
+    except Exception:
+        pass
+    return res

@@ -88,7 +88,7 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
     prediction = model.predict(df)[0]
     proba = dict(zip(model.classes_, model.predict_proba(df)[0].round(3)))
 
-    return {
+    res = {
         "location": w.get("location", location), 
         "date": w.get("date"), 
         "crop": crop, 
@@ -96,3 +96,16 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
         "climate_risk": prediction, 
         "probabilities": proba,
     }
+    try:
+        from database import save_prediction_to_supabase
+        save_prediction_to_supabase(
+            prediction_type="climate_risk",
+            location=res["location"],
+            crop=crop,
+            inputs={"location": location, "crop": crop, "season": season},
+            results={"climate_risk": prediction, "probabilities": proba},
+            model_source="random_forest"
+        )
+    except Exception:
+        pass
+    return res

@@ -7,3 +7,6 @@ joblib
 fastapi
 uvicorn
 pydantic
+plotly
+streamlit-lottie
+pillow

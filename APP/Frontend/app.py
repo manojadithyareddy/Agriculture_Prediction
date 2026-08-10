@@ -30,13 +30,13 @@ st.markdown("""
         font-family: 'Inter', sans-serif;
     }
 
-    /* ── App Background — animated gradient ── */
+    /* ── App Background — animated RGB gradient ── */
     .stApp {
-        background: linear-gradient(135deg, #020a05 0%, #041a0a 40%, #051f0d 70%, #081a06 100%);
+        background: linear-gradient(135deg, rgb(3, 14, 7) 0%, rgb(8, 32, 16) 40%, rgb(5, 24, 12) 75%, rgb(2, 12, 6) 100%);
         min-height: 100vh;
     }
 
-    /* ── Animated floating dots (via pseudo-elements on body) ── */
+    /* ── Main Container ── */
     .main .block-container {
         padding-top: 1.5rem;
         max-width: 1100px;
@@ -44,22 +44,22 @@ st.markdown("""
     }
 
     /* ══════════════════════════════════════
-       SIDEBAR — glassmorphism
+       SIDEBAR — RGB glassmorphism
     ══════════════════════════════════════ */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, rgba(5,30,12,0.97) 0%, rgba(10,50,20,0.95) 100%) !important;
+        background: linear-gradient(180deg, rgba(5, 30, 12, 0.97) 0%, rgba(10, 50, 20, 0.95) 100%) !important;
         border-right: 1px solid rgba(46, 204, 113, 0.15) !important;
         backdrop-filter: blur(20px);
         box-shadow: 4px 0 30px rgba(0,0,0,0.5);
     }
-    [data-testid="stSidebar"] * { color: #d4f0de !important; }
-    [data-testid="stSidebar"] hr { border-color: rgba(46,204,113,0.25) !important; }
+    [data-testid="stSidebar"] * { color: rgba(212, 240, 222, 0.85) !important; }
+    [data-testid="stSidebar"] hr { border-color: rgba(46, 204, 113, 0.22) !important; }
 
     .sidebar-logo {
         font-family: 'Space Grotesk', sans-serif;
         font-size: 1.6rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #2ecc71, #a8e063);
+        background: linear-gradient(135deg, rgb(46, 204, 113), rgb(168, 224, 99));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -67,7 +67,7 @@ st.markdown("""
     }
     .sidebar-sub {
         font-size: 0.78rem;
-        color: rgba(200,240,210,0.6) !important;
+        color: rgba(200, 240, 210, 0.65) !important;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         margin-bottom: 1rem;
@@ -82,8 +82,8 @@ st.markdown("""
         border: 1px solid transparent;
     }
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {
-        background: rgba(46,204,113,0.12);
-        border-color: rgba(46,204,113,0.2);
+        background: rgba(46, 204, 113, 0.12);
+        border-color: rgba(46, 204, 113, 0.22);
     }
 
     /* Status badge */
@@ -96,21 +96,21 @@ st.markdown("""
         font-size: 0.8rem;
         font-weight: 600;
     }
-    .status-badge.online { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
-    .status-badge.offline { background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+    .status-badge.online { background: rgba(46, 204, 113, 0.15); color: rgb(46, 204, 113); border: 1px solid rgba(46, 204, 113, 0.3); }
+    .status-badge.offline { background: rgba(231, 76, 60, 0.15); color: rgb(231, 76, 60); border: 1px solid rgba(231, 76, 60, 0.3); }
 
     /* ══════════════════════════════════════
-       HERO BANNER — v4 ultra premium
+       HERO BANNER — RGB ultra premium
     ══════════════════════════════════════ */
     .hero-v4 {
         position: relative;
-        background: linear-gradient(135deg, #0a2e12 0%, #0f4d20 35%, #145a32 70%, #1a7a45 100%);
+        background: linear-gradient(135deg, rgba(10, 46, 18, 0.95) 0%, rgba(15, 77, 32, 0.95) 35%, rgba(20, 90, 50, 0.95) 70%, rgba(26, 122, 69, 0.95) 100%);
         border-radius: 24px;
-        padding: 3rem 2.5rem;
-        margin-bottom: 2.5rem;
+        padding: 2.8rem 2.4rem;
+        margin-bottom: 2.2rem;
         overflow: hidden;
-        border: 1px solid rgba(46,204,113,0.2);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(46,204,113,0.08);
+        border: 1px solid rgba(46, 204, 113, 0.22);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(46, 204, 113, 0.08);
     }
     .hero-v4::before {
         content: '';
@@ -119,7 +119,7 @@ st.markdown("""
         right: -10%;
         width: 500px;
         height: 500px;
-        background: radial-gradient(circle, rgba(46,204,113,0.12) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(46, 204, 113, 0.12) 0%, transparent 70%);
         pointer-events: none;
     }
     .hero-v4::after {
@@ -129,96 +129,96 @@ st.markdown("""
         left: 20%;
         width: 300px;
         height: 300px;
-        background: radial-gradient(circle, rgba(39,174,96,0.08) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(39, 174, 96, 0.08) 0%, transparent 70%);
         pointer-events: none;
     }
     .hero-v4 .badge {
         display: inline-block;
-        background: rgba(46,204,113,0.15);
-        border: 1px solid rgba(46,204,113,0.35);
-        color: #2ecc71;
+        background: rgba(46, 204, 113, 0.15);
+        border: 1px solid rgba(46, 204, 113, 0.35);
+        color: rgb(46, 204, 113);
         font-size: 0.75rem;
         font-weight: 600;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         padding: 4px 14px;
         border-radius: 20px;
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
     }
     .hero-v4 h1 {
         font-family: 'Space Grotesk', sans-serif;
-        font-size: 2.8rem;
+        font-size: 2.6rem;
         font-weight: 800;
-        color: #fff;
-        margin: 0 0 0.6rem;
+        color: rgba(245, 255, 248, 0.92);
+        margin: 0 0 0.5rem;
         line-height: 1.15;
         position: relative;
         z-index: 1;
     }
     .hero-v4 h1 span { 
-        background: linear-gradient(135deg, #2ecc71, #a8e063);
+        background: linear-gradient(135deg, rgb(46, 204, 113), rgb(168, 224, 99));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
     .hero-v4 p {
-        font-size: 1.05rem;
-        color: rgba(255,255,255,0.75);
+        font-size: 1.02rem;
+        color: rgba(210, 240, 220, 0.75);
         margin: 0;
         position: relative;
         z-index: 1;
-        max-width: 550px;
+        max-width: 580px;
     }
     .hero-v4 .hero-chips {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
-        margin-top: 1.4rem;
+        margin-top: 1.2rem;
         position: relative;
         z-index: 1;
     }
     .hero-v4 .chip {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.15);
-        color: rgba(255,255,255,0.85);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: rgba(230, 245, 235, 0.82);
         font-size: 0.8rem;
         padding: 4px 12px;
         border-radius: 16px;
     }
 
     /* ══════════════════════════════════════
-       GLASS CARDS
+       GLASS CARDS — RGB subtle text balance
     ══════════════════════════════════════ */
     .glass-card {
-        background: rgba(10, 30, 15, 0.7);
-        border: 1px solid rgba(46,204,113,0.15);
+        background: rgba(10, 32, 16, 0.65);
+        border: 1px solid rgba(46, 204, 113, 0.18);
         border-radius: 18px;
-        padding: 1.5rem 1.8rem;
+        padding: 1.4rem 1.7rem;
         backdrop-filter: blur(12px);
-        box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
         margin-bottom: 1rem;
         transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     }
     .glass-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        border-color: rgba(46,204,113,0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        border-color: rgba(46, 204, 113, 0.32);
     }
     .glass-card h4 {
         font-family: 'Space Grotesk', sans-serif;
-        color: #c8f0d8;
+        color: rgba(215, 242, 224, 0.9);
         font-size: 1rem;
         font-weight: 600;
         margin: 0 0 6px;
     }
-    .glass-card p { color: #7aab8a; font-size: 0.88rem; margin: 0; line-height: 1.5; }
+    .glass-card p { color: rgba(160, 205, 175, 0.75); font-size: 0.88rem; margin: 0; line-height: 1.5; }
 
     /* ── Metric / stat cards ── */
     .stat-card {
-        background: linear-gradient(135deg, rgba(14, 50, 25, 0.9), rgba(20, 80, 40, 0.9));
-        border: 1px solid rgba(46,204,113,0.2);
+        background: linear-gradient(135deg, rgba(14, 50, 25, 0.85), rgba(20, 80, 40, 0.85));
+        border: 1px solid rgba(46, 204, 113, 0.22);
         border-radius: 18px;
-        padding: 1.4rem 1.6rem;
+        padding: 1.3rem 1.5rem;
         text-align: center;
         backdrop-filter: blur(12px);
         box-shadow: 0 4px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
@@ -228,41 +228,41 @@ st.markdown("""
     .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
     .stat-card .stat-value {
         font-family: 'Space Grotesk', sans-serif;
-        font-size: 2.2rem;
+        font-size: 2.1rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #2ecc71, #a8e063);
+        background: linear-gradient(135deg, rgb(46, 204, 113), rgb(168, 224, 99));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         margin: 0;
         line-height: 1.1;
     }
-    .stat-card .stat-label { color: rgba(200,240,210,0.6); font-size: 0.82rem; margin: 4px 0 0; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+    .stat-card .stat-label { color: rgba(190, 230, 202, 0.65); font-size: 0.82rem; margin: 4px 0 0; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
     .stat-card .stat-icon { font-size: 1.6rem; margin-bottom: 0.5rem; display: block; }
 
     /* ── Result display card ── */
     .result-card {
         border-radius: 16px;
-        padding: 1.4rem 1.8rem;
+        padding: 1.3rem 1.7rem;
         margin: 1rem 0;
         border-left: 4px solid;
         backdrop-filter: blur(10px);
     }
-    .result-card.success { background: rgba(46,204,113,0.08); border-left-color: #2ecc71; }
-    .result-card.warning { background: rgba(243,156,18,0.08); border-left-color: #f39c12; }
-    .result-card.danger  { background: rgba(231,76,60,0.08);  border-left-color: #e74c3c; }
-    .result-card.info    { background: rgba(52,152,219,0.08); border-left-color: #3498db; }
-    .result-card.purple  { background: rgba(155,89,182,0.08); border-left-color: #9b59b6; }
-    .result-card h3 { color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin: 0 0 4px; }
-    .result-card .label { color: rgba(255,255,255,0.5); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-    .result-card .value { font-size: 1.8rem; font-weight: 700; color: #fff; }
+    .result-card.success { background: rgba(46, 204, 113, 0.1); border-left-color: rgb(46, 204, 113); }
+    .result-card.warning { background: rgba(243, 156, 18, 0.1); border-left-color: rgb(243, 156, 18); }
+    .result-card.danger  { background: rgba(231, 76, 60, 0.1);  border-left-color: rgb(231, 76, 60); }
+    .result-card.info    { background: rgba(52, 152, 219, 0.1); border-left-color: rgb(52, 152, 219); }
+    .result-card.purple  { background: rgba(155, 89, 182, 0.1); border-left-color: rgb(155, 89, 182); }
+    .result-card h3 { color: rgba(240, 252, 244, 0.92); font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin: 0 0 4px; }
+    .result-card .label { color: rgba(200, 235, 212, 0.65); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .result-card .value { font-size: 1.75rem; font-weight: 700; color: rgba(245, 255, 248, 0.95); }
 
     /* ── Section header ── */
     .section-header {
         font-family: 'Space Grotesk', sans-serif;
-        font-size: 1.3rem;
+        font-size: 1.25rem;
         font-weight: 700;
-        color: #d4f0de;
+        color: rgba(212, 240, 222, 0.9);
         margin: 1.5rem 0 1rem;
         display: flex;
         align-items: center;
@@ -272,18 +272,16 @@ st.markdown("""
         content: '';
         flex: 1;
         height: 1px;
-        background: linear-gradient(90deg, rgba(46,204,113,0.3), transparent);
+        background: linear-gradient(90deg, rgba(46, 204, 113, 0.3), transparent);
     }
 
-
-
     /* ══════════════════════════════════════
-       INPUT STYLING — dark premium
+       INPUT STYLING — RGB dark balanced
     ══════════════════════════════════════ */
     .stTextInput label, .stSelectbox label,
     .stNumberInput label, .stCheckbox label,
     [data-testid="stWidgetLabel"] p {
-        color: rgba(200,240,210,0.7) !important;
+        color: rgba(190, 230, 202, 0.72) !important;
         font-size: 0.82rem !important;
         font-weight: 600 !important;
         letter-spacing: 0.04em !important;
@@ -291,61 +289,61 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
     .stTextInput > div > div > input {
-        background-color: rgba(10,30,15,0.8) !important;
-        color: #e8f5ec !important;
-        border: 1.5px solid rgba(46,204,113,0.2) !important;
+        background-color: rgba(10, 30, 15, 0.8) !important;
+        color: rgba(235, 250, 240, 0.92) !important;
+        border: 1.5px solid rgba(46, 204, 113, 0.22) !important;
         border-radius: 10px !important;
         padding: 10px 14px !important;
         font-size: 0.93rem !important;
         transition: border-color 0.25s, box-shadow 0.25s;
     }
     .stTextInput > div > div > input:focus {
-        border-color: #2ecc71 !important;
-        box-shadow: 0 0 0 3px rgba(46,204,113,0.12) !important;
+        border-color: rgb(46, 204, 113) !important;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.14) !important;
     }
     .stSelectbox > div > div {
-        background-color: rgba(10,30,15,0.8) !important;
-        border: 1.5px solid rgba(46,204,113,0.2) !important;
+        background-color: rgba(10, 30, 15, 0.8) !important;
+        border: 1.5px solid rgba(46, 204, 113, 0.22) !important;
         border-radius: 10px !important;
-        color: #e8f5ec !important;
+        color: rgba(235, 250, 240, 0.92) !important;
         transition: border-color 0.25s;
     }
     .stSelectbox > div > div:focus-within, .stSelectbox > div > div:hover {
-        border-color: #2ecc71 !important;
-        box-shadow: 0 0 0 3px rgba(46,204,113,0.12) !important;
+        border-color: rgb(46, 204, 113) !important;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.14) !important;
     }
-    .stSelectbox svg { color: #2ecc71 !important; }
+    .stSelectbox svg { color: rgb(46, 204, 113) !important; }
     [data-baseweb="popover"] [data-baseweb="menu"] {
-        background-color: #0a1f0e !important;
-        border: 1px solid rgba(46,204,113,0.2) !important;
+        background-color: rgb(10, 31, 14) !important;
+        border: 1px solid rgba(46, 204, 113, 0.22) !important;
         border-radius: 10px !important;
     }
     [data-baseweb="option"] {
-        background-color: #0a1f0e !important;
-        color: #c8f0d8 !important;
+        background-color: rgb(10, 31, 14) !important;
+        color: rgba(200, 240, 216, 0.88) !important;
         padding: 10px 16px !important;
         font-size: 0.9rem !important;
         transition: background 0.15s;
     }
     [data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
-        background-color: rgba(46,204,113,0.15) !important;
-        color: #ffffff !important;
+        background-color: rgba(46, 204, 113, 0.15) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
     }
     .stNumberInput input {
-        background-color: rgba(10,30,15,0.8) !important;
-        color: #e8f5ec !important;
-        border: 1.5px solid rgba(46,204,113,0.2) !important;
+        background-color: rgba(10, 30, 15, 0.8) !important;
+        color: rgba(235, 250, 240, 0.92) !important;
+        border: 1.5px solid rgba(46, 204, 113, 0.22) !important;
         border-radius: 10px !important;
     }
     .stNumberInput input:focus {
-        border-color: #2ecc71 !important;
-        box-shadow: 0 0 0 3px rgba(46,204,113,0.12) !important;
+        border-color: rgb(46, 204, 113) !important;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.14) !important;
     }
 
     /* ── Buttons ── */
     .stButton > button {
-        background: linear-gradient(135deg, #16a34a, #22c55e) !important;
-        color: #fff !important;
+        background: linear-gradient(135deg, rgb(22, 163, 74), rgb(34, 197, 94)) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
         border: none !important;
         border-radius: 10px !important;
         padding: 0.6rem 1.6rem !important;
@@ -353,25 +351,25 @@ st.markdown("""
         font-weight: 700 !important;
         letter-spacing: 0.02em;
         transition: transform 0.15s, box-shadow 0.15s;
-        box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+        box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
     }
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(34,197,94,0.45) !important;
+        box-shadow: 0 8px 24px rgba(34, 197, 94, 0.45) !important;
     }
     .stButton > button:active { transform: translateY(0); }
 
     /* ── Tabs ── */
     .stTabs [data-baseweb="tab-list"] {
-        background: rgba(5,20,10,0.6) !important;
-        border-bottom: 1px solid rgba(46,204,113,0.12) !important;
+        background: rgba(5, 20, 10, 0.6) !important;
+        border-bottom: 1px solid rgba(46, 204, 113, 0.14) !important;
         gap: 4px;
         border-radius: 12px 12px 0 0 !important;
         padding: 4px 4px 0 !important;
     }
     .stTabs [data-baseweb="tab"] {
         background: transparent !important;
-        color: rgba(200,240,210,0.5) !important;
+        color: rgba(185, 225, 198, 0.6) !important;
         border-radius: 8px 8px 0 0 !important;
         padding: 8px 16px !important;
         font-weight: 600;
@@ -379,13 +377,13 @@ st.markdown("""
         transition: all 0.2s;
     }
     .stTabs [aria-selected="true"] {
-        background: rgba(46,204,113,0.12) !important;
-        color: #2ecc71 !important;
-        border-bottom: 2px solid #2ecc71 !important;
+        background: rgba(46, 204, 113, 0.12) !important;
+        color: rgb(46, 204, 113) !important;
+        border-bottom: 2px solid rgb(46, 204, 113) !important;
     }
     .stTabs [data-baseweb="tab-panel"] {
-        background: rgba(5,20,10,0.5) !important;
-        border: 1px solid rgba(46,204,113,0.1) !important;
+        background: rgba(5, 20, 10, 0.5) !important;
+        border: 1px solid rgba(46, 204, 113, 0.12) !important;
         border-radius: 0 0 14px 14px !important;
         padding: 1.8rem !important;
         backdrop-filter: blur(10px);
@@ -393,77 +391,60 @@ st.markdown("""
 
     /* ── Streamlit alerts override ── */
     .stSuccess, [data-testid="stNotification"][kind="success"] {
-        background: rgba(46,204,113,0.08) !important;
-        border-left-color: #2ecc71 !important;
-        color: #a8d5b8 !important;
+        background: rgba(46, 204, 113, 0.08) !important;
+        border-left-color: rgb(46, 204, 113) !important;
+        color: rgba(168, 213, 184, 0.9) !important;
         border-radius: 10px !important;
     }
     .stError, [data-testid="stNotification"][kind="error"] {
-        background: rgba(231,76,60,0.08) !important;
-        border-left-color: #e74c3c !important;
-        color: #f1a1a1 !important;
+        background: rgba(231, 76, 60, 0.08) !important;
+        border-left-color: rgb(231, 76, 60) !important;
+        color: rgba(241, 161, 161, 0.9) !important;
         border-radius: 10px !important;
     }
     .stWarning, [data-testid="stNotification"][kind="warning"] {
-        background: rgba(243,156,18,0.08) !important;
-        border-left-color: #f39c12 !important;
-        color: #f5c88a !important;
+        background: rgba(243, 156, 18, 0.08) !important;
+        border-left-color: rgb(243, 156, 18) !important;
+        color: rgba(245, 200, 138, 0.9) !important;
         border-radius: 10px !important;
     }
     .stInfo, [data-testid="stNotification"][kind="info"] {
-        background: rgba(52,152,219,0.08) !important;
-        border-left-color: #3498db !important;
-        color: #a8d0f0 !important;
+        background: rgba(52, 152, 219, 0.08) !important;
+        border-left-color: rgb(52, 152, 219) !important;
+        color: rgba(168, 208, 240, 0.9) !important;
         border-radius: 10px !important;
     }
 
     /* ── Expander ── */
     .streamlit-expanderHeader {
-        background: rgba(10,30,15,0.7) !important;
+        background: rgba(10, 30, 15, 0.7) !important;
         border-radius: 10px !important;
-        border: 1px solid rgba(46,204,113,0.15) !important;
-        color: #c8f0d8 !important;
+        border: 1px solid rgba(46, 204, 113, 0.18) !important;
+        color: rgba(200, 240, 216, 0.88) !important;
     }
 
     /* ── Divider ── */
-    hr { border-color: rgba(46,204,113,0.12) !important; }
+    hr { border-color: rgba(46, 204, 113, 0.14) !important; }
 
     /* ── Spinner ── */
-    .stSpinner > div { border-top-color: #2ecc71 !important; }
+    .stSpinner > div { border-top-color: rgb(46, 204, 113) !important; }
 
     /* ── Checkbox ── */
-    .stCheckbox span { color: #c8f0d8 !important; }
+    .stCheckbox span { color: rgba(200, 240, 216, 0.85) !important; }
 
     /* ── Bar chart ── */
     [data-testid="stVegaLiteChart"] canvas { border-radius: 12px; }
 
-    /* ── Caption text ── */
-    .stCaption { color: rgba(200,240,210,0.5) !important; }
+    /* ── Caption text (subdued, non-dominating) ── */
+    .stCaption { color: rgba(160, 205, 175, 0.55) !important; }
 
     /* ── Progress bar ── */
-    .stProgress > div > div { background: linear-gradient(90deg, #16a34a, #2ecc71) !important; border-radius: 4px !important; }
-
-    /* ── Forecast row ── */
-    .forecast-row {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 8px;
-        margin-top: 0.5rem;
+    .stProgress > div > div { background: linear-gradient(90deg, rgb(22, 163, 74), rgb(46, 204, 113)) !important; border-radius: 4px !important; }
+    .stProgress label, .stProgress [data-testid="stWidgetLabel"] p {
+        font-size: 1.02rem !important;
+        font-weight: 600 !important;
+        color: rgba(212, 240, 222, 0.88) !important;
     }
-    .forecast-day {
-        flex: 1;
-        min-width: 90px;
-        background: rgba(10,30,15,0.7);
-        border: 1px solid rgba(46,204,113,0.15);
-        border-radius: 14px;
-        padding: 0.9rem 0.7rem;
-        text-align: center;
-    }
-    .forecast-day .fd-date { font-size: 0.7rem; color: rgba(200,240,210,0.5); text-transform: uppercase; letter-spacing: 0.05em; }
-    .forecast-day .fd-icon { font-size: 1.4rem; margin: 4px 0; }
-    .forecast-day .fd-temp { font-size: 1.1rem; font-weight: 700; color: #d4f0de; }
-    .forecast-day .fd-rain { font-size: 0.75rem; color: #3498db; margin-top: 2px; }
 
     /* ── Risk badge ── */
     .risk-badge {
@@ -475,10 +456,10 @@ st.markdown("""
         letter-spacing: 0.05em;
         text-transform: uppercase;
     }
-    .risk-low      { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid #2ecc71; }
-    .risk-moderate { background: rgba(243,156,18,0.15); color: #f39c12; border: 1px solid #f39c12; }
-    .risk-high     { background: rgba(231,76,60,0.15);  color: #e74c3c; border: 1px solid #e74c3c; }
-    .risk-extreme  { background: rgba(192,57,43,0.2);   color: #c0392b; border: 1px solid #c0392b; }
+    .risk-low      { background: rgba(46, 204, 113, 0.15); color: rgb(46, 204, 113); border: 1px solid rgb(46, 204, 113); }
+    .risk-moderate { background: rgba(243, 156, 18, 0.15); color: rgb(243, 156, 18); border: 1px solid rgb(243, 156, 18); }
+    .risk-high     { background: rgba(231, 76, 60, 0.15);  color: rgb(231, 76, 60); border: 1px solid rgb(231, 76, 60); }
+    .risk-extreme  { background: rgba(192, 57, 43, 0.2);   color: rgb(192, 57, 43); border: 1px solid rgb(192, 57, 43); }
 
     /* ── Version tag in sidebar ── */
     .ver-tag {
@@ -525,6 +506,38 @@ CROPS = [
     "Papaya", "Pomegranate", "Tender Coconut", "Water Melon",
     "Karbuja(Musk Melon)", "Beans", "Black Gram Dal(Urd Dal)",
 ]
+
+# ---------------------------------------------------------------------------
+# Animation Components Integration
+# ---------------------------------------------------------------------------
+try:
+    from components import (
+        render_hero_animation,
+        render_ecosystem_animation,
+        render_ai_processing_animation,
+        render_climate_animation,
+        render_crop_animation,
+        render_yield_animation,
+        render_irrigation_animation,
+        render_market_animation,
+        render_lottie_or_fallback,
+    )
+except ImportError:
+    try:
+        from APP.Frontend.components import (
+            render_hero_animation,
+            render_ecosystem_animation,
+            render_ai_processing_animation,
+            render_climate_animation,
+            render_crop_animation,
+            render_yield_animation,
+            render_irrigation_animation,
+            render_market_animation,
+            render_lottie_or_fallback,
+        )
+    except Exception:
+        pass
+
 LOCATIONS = sorted([
     "Adilabad", "Bhadradri Kothagudem", "Hyderabad", "Jagtial", "Jangaon",
     "Jayashankar Bhupalpally", "Jogulamba Gadwal", "Kamareddy", "Karimnagar",
@@ -680,6 +693,25 @@ def weather_icon(rain: float, temp: float) -> str:
     if temp > 35:  return "☀️"
     if temp > 28:  return "🌤️"
     return "⛅"
+
+def get_crop_icon(crop: str) -> str:
+    if not crop: return "🌱"
+    crop = crop.lower()
+    if "rice" in crop: return "🌾"
+    if "maize" in crop: return "🌽"
+    if "cotton" in crop: return "☁️"
+    if "banana" in crop: return "🍌"
+    if "mango" in crop: return "🥭"
+    if "grape" in crop: return "🍇"
+    if "orange" in crop: return "🍊"
+    if "papaya" in crop: return "🍈"
+    if "pomegranate" in crop: return "🍎"
+    if "coconut" in crop: return "🥥"
+    if "water melon" in crop or "watermelon" in crop: return "🍉"
+    if "melon" in crop: return "🍈"
+    if "bean" in crop: return "🫘"
+    if "gram" in crop or "dal" in crop: return "🥣"
+    return "🌱"
 
 @st.cache_data
 def get_dataset_preview(source_key: str):
@@ -883,6 +915,9 @@ def get_dataset_preview(source_key: str):
 # Sidebar
 # ---------------------------------------------------------------------------
 with st.sidebar:
+    img_path = os.path.join(os.path.dirname(__file__), "agri_banner.png")
+    if os.path.exists(img_path):
+        st.image(img_path, use_container_width=True)
     st.markdown('<div class="sidebar-logo">🌾 AgriPredict</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-sub">AI-Powered Farm Intelligence · v4</div>', unsafe_allow_html=True)
     st.divider()
@@ -924,6 +959,13 @@ if page == "🏠  Dashboard":
     </div>
     """, unsafe_allow_html=True)
 
+    try:
+        render_hero_animation()
+    except Exception:
+        pass
+
+
+
     # ── Stat Cards Row ──
     c1, c2, c3, c4, c5 = st.columns(5)
     stats = [
@@ -951,6 +993,12 @@ if page == "🏠  Dashboard":
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="section-header">✨ Core Capabilities</div>', unsafe_allow_html=True)
+
+    try:
+        render_ecosystem_animation()
+    except Exception:
+        pass
+
 
     features = [
         ("🌦️", "Climate Risk Prediction", "Assess flood, drought, and heat-stress risk using a 93-feature Random Forest model trained on AP/TS historical data.", "#2ecc71"),
@@ -1272,6 +1320,12 @@ elif page == "🔬  Predictions":
                 if use_custom:
                     payload["phosphorus"] = p_val
                     payload["potassium"] = k_val
+                
+                try:
+                    render_ai_processing_animation("Crop Recommendation")
+                except Exception:
+                    pass
+
                 with st.spinner("🤖 Analyzing soil & weather data..."):
                     result, error = call_api("/predict/crop-recommendation", payload)
                 if error:
@@ -1288,12 +1342,18 @@ elif page == "🔬  Predictions":
             st.markdown(f"""
             <div class="result-card success">
                 <div class="label">Best Crop for {location}</div>
-                <div class="value">🌾 {rec_crop.title()}</div>
+                <div class="value">{get_crop_icon(rec_crop)} {rec_crop.title()}</div>
                 <div style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:6px;">
                     📅 {result.get('date', '')} &nbsp;·&nbsp; AI Confidence Model
                 </div>
             </div>
             """, unsafe_allow_html=True)
+
+            try:
+                render_crop_animation(rec_crop, result.get("top_5"))
+            except Exception:
+                pass
+
 
             t_eval = result.get("target_crop_eval")
             if t_eval:
@@ -1302,7 +1362,7 @@ elif page == "🔬  Predictions":
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div>
                             <span style="font-size:0.8rem; color:rgba(255,255,255,0.6);">Preferred Crop Evaluation</span>
-                            <h4 style="margin:2px 0 0; color:#3498db; font-size:1.05rem; font-weight:700;">🌱 {t_eval['requested_crop'].title()}</h4>
+                            <h4 style="margin:2px 0 0; color:#3498db; font-size:1.05rem; font-weight:700;">{get_crop_icon(t_eval['requested_crop'])} {t_eval['requested_crop'].title()}</h4>
                         </div>
                         <div style="text-align:right;">
                             <span style="background:rgba(52,152,219,0.2); color:#3498db; padding:4px 10px; border-radius:16px; font-weight:700; font-size:0.75rem; border:1px solid rgba(52,152,219,0.4);">
@@ -1317,10 +1377,11 @@ elif page == "🔬  Predictions":
                 """, unsafe_allow_html=True)
 
             if result.get("top_5"):
-                st.markdown("**Top 5 Candidates:**")
+                st.markdown('<div class="section-header" style="margin: 1.2rem 0 0.8rem;">🌾 Top 5 Crops</div>', unsafe_allow_html=True)
                 for i, c in enumerate(result["top_5"], 1):
                     pct = c["confidence"] * 100
-                    st.progress(int(pct), text=f"{i}. {c['crop'].title()} — {pct:.1f}%")
+                    st.markdown(f'<div style="font-size: 1.1rem; font-weight: 600; color: #d4f0de; margin: 0.7rem 0 0.25rem;">{i}. {get_crop_icon(c["crop"])} {c["crop"].title()} — <span style="color: #2ecc71; font-weight: 700;">{pct:.1f}%</span></div>', unsafe_allow_html=True)
+                    st.progress(int(pct))
 
             with st.expander("📋 Inputs used for prediction"):
                 st.json(result.get("inputs_used", {}))
@@ -1388,6 +1449,11 @@ elif page == "🔬  Predictions":
             if not location:
                 st.warning("Please select a district.")
             else:
+                try:
+                    render_ai_processing_animation("Climate Risk Prediction")
+                except Exception:
+                    pass
+
                 with st.spinner("🌡️ Fetching weather & computing risk..."):
                     result, error = call_api("/predict/climate-risk", {"location": location, "crop": crop})
                 if error:
@@ -1404,8 +1470,20 @@ elif page == "🔬  Predictions":
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
+
+                    try:
+                        render_climate_animation(risk, result.get("details") or result.get("weather_details"))
+                    except Exception:
+                        pass
+
                     st.markdown("**Confidence Breakdown:**")
-                    st.bar_chart(result["probabilities"])
+                    probs = result.get("probabilities", {})
+                    ordered_keys = ["low", "moderate", "high", "extreme"]
+                    df_chart = pd.DataFrame({
+                        "Risk Level": ordered_keys,
+                        "Confidence": [probs.get(k, 0.0) for k in ordered_keys]
+                    })
+                    st.bar_chart(df_chart, x="Risk Level", y="Confidence", sort=False)
 
     # ── Tab 3: Irrigation ─────────────────────────────────────────────────────
     with tab3:
@@ -1424,6 +1502,11 @@ elif page == "🔬  Predictions":
             if not location:
                 st.warning("Please select a district.")
             else:
+                try:
+                    render_ai_processing_animation("Irrigation Advisor")
+                except Exception:
+                    pass
+
                 with st.spinner("Calculating..."):
                     result, error = call_api("/predict/irrigation", {"location": location, "crop": crop, "growth_stage": growth_stage})
                 if error:
@@ -1441,6 +1524,13 @@ elif page == "🔬  Predictions":
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
+
+                    try:
+                        water_val = float(val) if val != "?" else 4.0
+                        render_irrigation_animation(water_val, crop, growth_stage, result.get("details"))
+                    except Exception:
+                        pass
+
                     details = result.get("details", {})
                     if details:
                         dc1, dc2, dc3, dc4 = st.columns(4)
@@ -1470,6 +1560,11 @@ elif page == "🔬  Predictions":
             if not location:
                 st.warning("Please select a district.")
             else:
+                try:
+                    render_ai_processing_animation("Yield Estimation")
+                except Exception:
+                    pass
+
                 with st.spinner("Estimating yield..."):
                     result, error = call_api("/predict/yield", {"location": location, "crop": crop, "area": area})
                 if error:
@@ -1483,13 +1578,20 @@ elif page == "🔬  Predictions":
                     st.markdown(f"""
                     <div class="result-card success">
                         <div class="label">Predicted Yield — {crop} on {area} ha</div>
-                        <div class="value">🌾 {val} tonnes</div>
+                        <div class="value">{get_crop_icon(crop)} {val} tonnes</div>
                         <div style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:8px;">
                             📍 {result.get('location', location)} &nbsp;·&nbsp; 🌤️ {season} season &nbsp;·&nbsp;
                             {f'📐 {val_ha} t/ha &nbsp;·&nbsp;' if val_ha else ''} {src_tag}
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
+
+                    try:
+                        yield_val = float(val) if val != "?" else 4.5
+                        render_yield_animation(yield_val, crop, area, result.get("factors"))
+                    except Exception:
+                        pass
+
                     factors = result.get("factors", {})
                     if factors:
                         st.markdown("**🔬 Yield Factor Breakdown (FAO model):**")
@@ -1522,6 +1624,11 @@ elif page == "🔬  Predictions":
             if not location:
                 st.warning("Please select a district.")
             else:
+                try:
+                    render_ai_processing_animation("Market Price Forecast")
+                except Exception:
+                    pass
+
                 with st.spinner("Fetching market data..."):
                     result, error = call_api("/predict/market-price", {"location": location, "commodity": commodity, "arrival_quantity": qty})
                 if error:
@@ -1543,6 +1650,13 @@ elif page == "🔬  Predictions":
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
+
+                        try:
+                            price_val = float(price) if price is not None else 3500.0
+                            render_market_animation(price_val, commodity, location, result.get("price_factors"))
+                        except Exception:
+                            pass
+
                         pf = result.get("price_factors", {})
                         if pf:
                             st.markdown("**📊 Price Factor Breakdown:**")
