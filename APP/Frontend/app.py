@@ -1472,7 +1472,12 @@ elif page == "🔬  Predictions":
                     """, unsafe_allow_html=True)
 
                     try:
-                        render_climate_animation(risk, result.get("details") or result.get("weather_details"))
+                        render_climate_animation(
+                            risk,
+                            weather_details=result.get("weather_details") or result.get("details"),
+                            risk_score=result.get("risk_score"),
+                            probabilities=result.get("probabilities")
+                        )
                     except Exception:
                         pass
 

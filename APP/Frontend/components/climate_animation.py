@@ -5,11 +5,11 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-def render_climate_animation(risk_level: str, weather_details: dict = None):
+def render_climate_animation(risk_level: str, weather_details: dict = None, risk_score: float = None, probabilities: dict = None):
     """
     Renders animated climate risk visualizations:
-    1. Environmental Parameter Radar (Temp, Humidity, Rain, Wind, Cloud Cover, Solar Radiation)
-    2. Risk Indicator Gauge (LOW → MODERATE → HIGH → EXTREME)
+    1. Dynamic Risk Gauge Indicator (Score 0-100 & LOW / MODERATE / HIGH / EXTREME)
+    2. Environmental Parameter Radar (Temp, Humidity, Rain, Wind, Cloud Cover, Solar Radiation)
     3. Weather Trend Timeline
     """
     st.subheader("🌦️ Environmental & Weather Intelligence")
@@ -17,8 +17,18 @@ def render_climate_animation(risk_level: str, weather_details: dict = None):
     col_gauge, col_radar = st.columns([1, 1])
 
     risk_clean = (risk_level or "Low").lower()
-    risk_val_map = {"low": 20, "moderate": 50, "high": 80, "extreme": 95}
-    gauge_score = risk_val_map.get(risk_clean, 25)
+
+    if risk_score is not None:
+        gauge_score = float(risk_score)
+    elif probabilities:
+        low_p = float(probabilities.get("low", 0.7))
+        mod_p = float(probabilities.get("moderate", 0.2))
+        high_p = float(probabilities.get("high", 0.05))
+        ext_p = float(probabilities.get("extreme", 0.05))
+        gauge_score = round(low_p * 18.0 + mod_p * 48.0 + high_p * 76.0 + ext_p * 95.0, 1)
+    else:
+        risk_val_map = {"low": 22.5, "moderate": 52.0, "high": 76.5, "extreme": 92.0}
+        gauge_score = risk_val_map.get(risk_clean, 25.0)
 
     risk_colors = {
         "low": "#2ecc71",
@@ -29,10 +39,10 @@ def render_climate_animation(risk_level: str, weather_details: dict = None):
     active_color = risk_colors.get(risk_clean, "#2ecc71")
 
     with col_gauge:
-        # Gauge chart for Climate Risk Indicator
         fig_gauge = go.Figure(go.Indicator(
-            mode="gauge+number+delta",
+            mode="gauge+number",
             value=gauge_score,
+            number={'suffix': "/100", 'font': {'size': 26, 'color': active_color}},
             title={'text': f"Climate Risk: {risk_level.upper()}", 'font': {'size': 18, 'color': active_color}},
             gauge={
                 'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "white"},
@@ -41,10 +51,10 @@ def render_climate_animation(risk_level: str, weather_details: dict = None):
                 'borderwidth': 2,
                 'bordercolor': "rgba(46,204,113,0.3)",
                 'steps': [
-                    {'range': [0, 35], 'color': 'rgba(46, 204, 113, 0.2)'},
-                    {'range': [35, 65], 'color': 'rgba(243, 156, 18, 0.2)'},
-                    {'range': [65, 85], 'color': 'rgba(231, 76, 60, 0.2)'},
-                    {'range': [85, 100], 'color': 'rgba(192, 57, 43, 0.3)'}
+                    {'range': [0, 32], 'color': 'rgba(46, 204, 113, 0.2)'},
+                    {'range': [32, 62], 'color': 'rgba(243, 156, 18, 0.2)'},
+                    {'range': [62, 82], 'color': 'rgba(231, 76, 60, 0.2)'},
+                    {'range': [82, 100], 'color': 'rgba(192, 57, 43, 0.3)'}
                 ],
                 'threshold': {
                     'line': {'color': "white", 'width': 4},
@@ -64,10 +74,8 @@ def render_climate_animation(risk_level: str, weather_details: dict = None):
         st.plotly_chart(fig_gauge, use_container_width=True)
 
     with col_radar:
-        # Environmental Parameter Radar Chart
         categories = ['☀️ Temp (°C)', '💧 Humidity (%)', '🌧️ Rain (mm)', '💨 Wind (km/h)', '☁️ Cloud (%)', '☀️ Solar (MJ)']
         
-        # Use weather details if available, or sensible defaults
         temp = float(weather_details.get("temperature", 30)) if weather_details else 30.0
         rh = float(weather_details.get("humidity", 65)) if weather_details else 65.0
         rain = float(weather_details.get("rainfall", 5)) if weather_details else 5.0
@@ -75,7 +83,6 @@ def render_climate_animation(risk_level: str, weather_details: dict = None):
         cloud = float(weather_details.get("cloud_cover", 40)) if weather_details else 40.0
         solar = float(weather_details.get("solar_rad", 18)) if weather_details else 18.0
 
-        # Normalized values (0 - 100 scale) for radar
         norm_values = [
             min(100, (temp / 45) * 100),
             rh,
@@ -110,7 +117,6 @@ def render_climate_animation(risk_level: str, weather_details: dict = None):
         )
         st.plotly_chart(fig_radar, use_container_width=True)
 
-    # Animated Weather Timeline Chart
     st.caption("📈 Weather Parameter Trend entering AI Model")
     days = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"]
     df_trend = pd.DataFrame({

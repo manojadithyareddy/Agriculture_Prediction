@@ -45,7 +45,7 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
         "wind_gusts_10m": w["wind_gusts_10m"],
         "shortwave_radiation": w["shortwave_radiation"],
         "et0_fao_evapotranspiration": w["et0_fao_evapotranspiration"],
-        "Soil_Moisture": w.get("soil_moisture", 0), # Added .get() for safety
+        "Soil_Moisture": w.get("soil_moisture", 0),
         "Soil_Temperature": w.get("soil_temperature", 0),
         "Soil_pH": soil.get("soil_ph", 7.0),
         "Organic_Carbon": soil.get("organic_carbon", 0.5),
@@ -61,7 +61,6 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
     }
     df = pd.DataFrame([row])
 
-    # Safely fetch dictionary values using .get() to prevent KeyErrors
     city_key = (soil.get("city") or location).lower()
     state_key = (soil.get("state") or "telangana").lower()
     
@@ -73,11 +72,9 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
     ]:
         feat_names = enc.get_feature_names_out([col_name])
         try:
-            # OHE was fitted with a named DataFrame, so pass one to avoid UserWarning
             transform_result = enc.transform(pd.DataFrame([[value]], columns=[col_name]))
             enc_arr = transform_result.toarray() if hasattr(transform_result, 'toarray') else transform_result
         except ValueError:
-            # Unknown category — fill zeros so the model can still run
             import numpy as _np
             enc_arr = _np.zeros((1, len(feat_names)))
 
@@ -86,15 +83,81 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
 
     df = df.reindex(columns=FEATURE_ORDER, fill_value=0)
     prediction = model.predict(df)[0]
-    proba = dict(zip(model.classes_, model.predict_proba(df)[0].round(3)))
+    raw_proba = model.predict_proba(df)[0]
+    proba = {cls: round(float(p), 3) for cls, p in zip(model.classes_, raw_proba)}
+
+    # Dynamic Environmental & Crop Sensitivity Analysis
+    temp = w["temperature_2m"]
+    rh = w["relative_humidity_2m"]
+    precip = w["precipitation"]
+    wind = w["wind_speed_10m"]
+    heat_idx = row["Heat_Index"]
+    rain_7d = w["Rainfall_Last_7_Days"]
+    dry_days = w["Consecutive_Dry_Days"]
+
+    temp_stress = 0.0
+    if temp > 35 or heat_idx > 38:
+        temp_stress = min(40, (max(temp, heat_idx) - 34) * 4.5)
+    elif temp < 15:
+        temp_stress = min(35, (15 - temp) * 4.0)
+
+    water_stress = 0.0
+    if precip > 10 or rain_7d > 60:
+        water_stress = min(45, (max(precip, rain_7d / 4) - 8) * 3.5)
+    elif dry_days > 10:
+        water_stress = min(35, (dry_days - 8) * 3.0)
+
+    crop_lower = crop.lower()
+    crop_mult = 1.0
+    if any(c in crop_lower for c in ["orange", "grapes", "banana", "papaya", "pomegranate"]):
+        if rh > 75 or temp > 34 or precip > 8:
+            crop_mult = 1.35
+    elif "cotton" in crop_lower:
+        if precip > 10 or rain_7d > 50:
+            crop_mult = 1.4
+    elif "maize" in crop_lower:
+        if dry_days > 8:
+            crop_mult = 1.3
+
+    env_score = min(98.0, (temp_stress + water_stress) * crop_mult)
+
+    ml_score = (
+        float(proba.get("low", 0.7)) * 18.0 +
+        float(proba.get("moderate", 0.2)) * 48.0 +
+        float(proba.get("high", 0.05)) * 76.0 +
+        float(proba.get("extreme", 0.05)) * 95.0
+    )
+
+    final_score = round(min(99.0, max(8.0, ml_score * 0.45 + env_score * 0.55)), 1)
+
+    if final_score < 32:
+        final_risk = "low"
+    elif final_score < 62:
+        final_risk = "moderate"
+    elif final_score < 82:
+        final_risk = "high"
+    else:
+        final_risk = "extreme"
 
     res = {
         "location": w.get("location", location), 
         "date": w.get("date"), 
         "crop": crop, 
         "season": season,
-        "climate_risk": prediction, 
+        "climate_risk": final_risk, 
+        "risk_score": final_score,
         "probabilities": proba,
+        "weather_details": {
+            "temperature": round(temp, 1),
+            "humidity": round(rh, 1),
+            "rainfall": round(precip, 1),
+            "wind_speed": round(wind, 1),
+            "cloud_cover": round(w.get("cloud_cover", 40), 1),
+            "solar_rad": round(w.get("shortwave_radiation", 18), 1),
+            "heat_index": round(heat_idx, 1),
+            "rainfall_7d": round(rain_7d, 1),
+            "consecutive_dry_days": dry_days
+        }
     }
     try:
         from database import save_prediction_to_supabase
@@ -103,7 +166,7 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
             location=res["location"],
             crop=crop,
             inputs={"location": location, "crop": crop, "season": season},
-            results={"climate_risk": prediction, "probabilities": proba},
+            results={"climate_risk": final_risk, "risk_score": final_score, "probabilities": proba},
             model_source="random_forest"
         )
     except Exception:
