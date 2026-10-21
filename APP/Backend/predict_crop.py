@@ -171,7 +171,7 @@ def predict_crop(location: str, crop: str = None, phosphorus: float = None, pota
             "suitability": "High" if (matched_rank and matched_rank <= 3) else ("Moderate" if (matched_rank and matched_rank <= 7) else "Low")
         }
 
-    return {
+    res = {
         "location":         w["location"],
         "date":             w["date"],
         "recommended_crop": recommended,
@@ -185,4 +185,17 @@ def predict_crop(location: str, crop: str = None, phosphorus: float = None, pota
             "rainfall": rainfall,
         },
     }
+    try:
+        from database import save_prediction_to_supabase
+        save_prediction_to_supabase(
+            prediction_type="crop_recommendation",
+            location=res["location"],
+            crop=crop or recommended,
+            inputs=res["inputs_used"],
+            results={"recommended_crop": recommended, "top_5": top5, "target_crop_eval": target_crop_eval},
+            model_source=_model_source
+        )
+    except Exception:
+        pass
+    return res
 

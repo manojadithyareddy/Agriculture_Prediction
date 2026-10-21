@@ -6,10 +6,18 @@ from services.soil_lookup import find_soil_profile
 from services.date_utils import climate_season
 
 _DIR = os.path.dirname(__file__)
-model = joblib.load(os.path.join(_DIR, "..", "Pickles", "climate_risk_model.pkl"))
-encoders = joblib.load(os.path.join(_DIR, "..", "Pickles", "encoders.pkl"))
+_model = None
+_encoders = None
+_FEATURE_ORDER = None
 
-FEATURE_ORDER = list(model.feature_names_in_)
+def _get_model_and_encoders():
+    global _model, _encoders, _FEATURE_ORDER
+    if _model is None:
+        _model = joblib.load(os.path.join(_DIR, "..", "Pickles", "climate_risk_model.pkl"))
+        _encoders = joblib.load(os.path.join(_DIR, "..", "Pickles", "encoders.pkl"))
+        _FEATURE_ORDER = list(_model.feature_names_in_)
+    return _model, _encoders, _FEATURE_ORDER
+
 
 
 def _heat_index(temp_c: float, rh: float) -> float:
@@ -65,6 +73,7 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
     city_key = (soil.get("city") or location).lower()
     state_key = (soil.get("state") or "telangana").lower()
     
+    model, encoders, FEATURE_ORDER = _get_model_and_encoders()
     for col_name, enc, value in [
         ("city", encoders["city"], city_key),
         ("state", encoders["state"], state_key),
@@ -88,7 +97,7 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
     prediction = model.predict(df)[0]
     proba = dict(zip(model.classes_, model.predict_proba(df)[0].round(3)))
 
-    return {
+    res = {
         "location": w.get("location", location), 
         "date": w.get("date"), 
         "crop": crop, 
@@ -96,3 +105,16 @@ def predict_climate_risk(location: str, crop: str = "rice") -> dict:
         "climate_risk": prediction, 
         "probabilities": proba,
     }
+    try:
+        from database import save_prediction_to_supabase
+        save_prediction_to_supabase(
+            prediction_type="climate_risk",
+            location=res["location"],
+            crop=crop,
+            inputs={"location": location, "crop": crop, "season": season},
+            results={"climate_risk": prediction, "probabilities": proba},
+            model_source="random_forest"
+        )
+    except Exception:
+        pass
+    return res

@@ -23,475 +23,381 @@ st.set_page_config(
 # ---------------------------------------------------------------------------
 st.markdown("""
 <style>
-    /* ── Google Fonts ── */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+    /* ── IIT Research Edition — Google Fonts ── */
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-    html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
-    }
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    /* ── App Background — animated gradient ── */
+    /* ═══ IIT MIDNIGHT NAVY BACKGROUND ═══ */
     .stApp {
-        background: linear-gradient(135deg, #020a05 0%, #041a0a 40%, #051f0d 70%, #081a06 100%);
+        background: #060a12;
+        background-image:
+            radial-gradient(ellipse at 20% 20%, rgba(0,212,255,0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(0,255,157,0.03) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 0%,  rgba(99,102,241,0.05) 0%, transparent 60%);
         min-height: 100vh;
     }
-
-    /* ── Animated floating dots (via pseudo-elements on body) ── */
     .main .block-container {
-        padding-top: 1.5rem;
-        max-width: 1100px;
-        background: transparent;
+        padding-top: 1.2rem; max-width: 1140px;
+        background: transparent; position: relative; z-index: 1;
     }
 
-    /* ══════════════════════════════════════
-       SIDEBAR — glassmorphism
-    ══════════════════════════════════════ */
+    /* ═══ SIDEBAR — IIT Research Glass ═══ */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, rgba(5,30,12,0.97) 0%, rgba(10,50,20,0.95) 100%) !important;
-        border-right: 1px solid rgba(46, 204, 113, 0.15) !important;
-        backdrop-filter: blur(20px);
-        box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+        background: linear-gradient(180deg, rgba(6,10,18,0.98) 0%, rgba(8,14,26,0.97) 100%) !important;
+        border-right: 1px solid rgba(0,212,255,0.1) !important;
+        backdrop-filter: blur(24px);
+        box-shadow: 4px 0 40px rgba(0,0,0,0.6);
     }
-    [data-testid="stSidebar"] * { color: #d4f0de !important; }
-    [data-testid="stSidebar"] hr { border-color: rgba(46,204,113,0.25) !important; }
+    [data-testid="stSidebar"] * { color: #c8e8f8 !important; }
+    [data-testid="stSidebar"] hr { border-color: rgba(0,212,255,0.08) !important; }
 
     .sidebar-logo {
         font-family: 'Space Grotesk', sans-serif;
-        font-size: 1.6rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #2ecc71, #a8e063);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.2rem;
+        font-size: 1.5rem; font-weight: 800;
+        background: linear-gradient(135deg, #00d4ff, #00ff9d);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        letter-spacing: -0.02em; margin-bottom: 0.15rem;
     }
     .sidebar-sub {
-        font-size: 0.78rem;
-        color: rgba(200,240,210,0.6) !important;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 1rem;
+        font-size: 0.7rem; color: rgba(0,212,255,0.5) !important;
+        letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; margin-bottom: 1.2rem;
     }
-
-    /* ── Sidebar nav radio ── */
-    [data-testid="stSidebar"] .stRadio label { font-size: 0.95rem; font-weight: 500; }
+    .iit-badge {
+        background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(0,255,157,0.08));
+        border: 1px solid rgba(0,212,255,0.2); border-radius: 8px;
+        padding: 8px 14px; font-size: 0.72rem; font-weight: 700;
+        color: rgba(0,212,255,0.85) !important; text-align: center;
+        letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    [data-testid="stSidebar"] .stRadio label { font-size: 0.92rem; font-weight: 500; }
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
-        padding: 10px 14px;
-        border-radius: 10px;
-        transition: all 0.2s ease;
-        border: 1px solid transparent;
+        padding: 10px 14px; border-radius: 10px;
+        transition: all 0.25s ease; border: 1px solid transparent; margin-bottom: 3px;
     }
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {
-        background: rgba(46,204,113,0.12);
-        border-color: rgba(46,204,113,0.2);
+        background: rgba(0,212,255,0.07); border-color: rgba(0,212,255,0.15); transform: translateX(3px);
     }
 
-    /* Status badge */
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-    .status-badge.online { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
-    .status-badge.offline { background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
-
-    /* ══════════════════════════════════════
-       HERO BANNER — v4 ultra premium
-    ══════════════════════════════════════ */
+    /* ═══ IIT HERO BANNER ═══ */
     .hero-v4 {
         position: relative;
-        background: linear-gradient(135deg, #0a2e12 0%, #0f4d20 35%, #145a32 70%, #1a7a45 100%);
-        border-radius: 24px;
-        padding: 3rem 2.5rem;
-        margin-bottom: 2.5rem;
-        overflow: hidden;
-        border: 1px solid rgba(46,204,113,0.2);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(46,204,113,0.08);
+        background: linear-gradient(135deg, #060d1a 0%, #081426 30%, #0a1a35 60%, #060d1a 100%);
+        border-radius: 20px; padding: 2.8rem 2.8rem; margin-bottom: 2rem;
+        overflow: hidden; border: 1px solid rgba(0,212,255,0.12);
+        box-shadow: 0 0 60px rgba(0,212,255,0.05), 0 20px 60px rgba(0,0,0,0.5);
     }
     .hero-v4::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 500px;
-        height: 500px;
-        background: radial-gradient(circle, rgba(46,204,113,0.12) 0%, transparent 70%);
+        content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background:
+            radial-gradient(ellipse at 80% 20%, rgba(0,212,255,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 20% 80%, rgba(0,255,157,0.05) 0%, transparent 50%);
         pointer-events: none;
     }
     .hero-v4::after {
-        content: '';
-        position: absolute;
-        bottom: -30%;
-        left: 20%;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(39,174,96,0.08) 0%, transparent 70%);
-        pointer-events: none;
+        content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), rgba(0,255,157,0.3), transparent);
     }
     .hero-v4 .badge {
-        display: inline-block;
-        background: rgba(46,204,113,0.15);
-        border: 1px solid rgba(46,204,113,0.35);
-        color: #2ecc71;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        padding: 4px 14px;
-        border-radius: 20px;
-        margin-bottom: 1rem;
+        display: inline-block; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3);
+        color: #00d4ff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+        text-transform: uppercase; padding: 4px 14px; border-radius: 20px;
+        margin-bottom: 1rem; position: relative; z-index: 1;
     }
     .hero-v4 h1 {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 2.8rem;
-        font-weight: 800;
-        color: #fff;
-        margin: 0 0 0.6rem;
-        line-height: 1.15;
-        position: relative;
-        z-index: 1;
+        font-family: 'Space Grotesk', sans-serif; font-size: 2.9rem; font-weight: 800;
+        color: #fff; margin: 0 0 0.6rem; line-height: 1.1; letter-spacing: -0.03em;
+        position: relative; z-index: 1;
     }
-    .hero-v4 h1 span { 
-        background: linear-gradient(135deg, #2ecc71, #a8e063);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    .hero-v4 h1 span {
+        background: linear-gradient(135deg, #00d4ff 0%, #00ff9d 55%, #7c3aed 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .hero-v4 p {
-        font-size: 1.05rem;
-        color: rgba(255,255,255,0.75);
-        margin: 0;
-        position: relative;
-        z-index: 1;
-        max-width: 550px;
+        font-size: 1rem; color: rgba(200,230,255,0.65); margin: 0;
+        position: relative; z-index: 1; max-width: 560px; line-height: 1.6;
     }
-    .hero-v4 .hero-chips {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 1.4rem;
-        position: relative;
-        z-index: 1;
-    }
+    .hero-v4 .hero-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.4rem; position: relative; z-index: 1; }
     .hero-v4 .chip {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.15);
-        color: rgba(255,255,255,0.85);
-        font-size: 0.8rem;
-        padding: 4px 12px;
-        border-radius: 16px;
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(200,230,255,0.8); font-size: 0.77rem; font-weight: 500;
+        padding: 4px 12px; border-radius: 14px; letter-spacing: 0.02em;
     }
 
-    /* ══════════════════════════════════════
-       GLASS CARDS
-    ══════════════════════════════════════ */
+    /* ═══ STAT CARDS ═══ */
+    .stat-card {
+        background: rgba(8,14,26,0.85); border: 1px solid rgba(0,212,255,0.1);
+        border-radius: 16px; padding: 1.4rem 1.5rem; text-align: center;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+        margin-bottom: 0.8rem;
+        transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+        position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(0,212,255,0.6), rgba(0,255,157,0.4), transparent);
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0 30px rgba(0,212,255,0.12), 0 12px 40px rgba(0,0,0,0.4);
+        border-color: rgba(0,212,255,0.2);
+    }
+    .stat-card .stat-value {
+        font-family: 'Space Grotesk', sans-serif; font-size: 2.3rem; font-weight: 800;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, #00d4ff, #00ff9d);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        margin: 0; line-height: 1.1;
+    }
+    .stat-card .stat-label {
+        color: rgba(180,220,255,0.5); font-size: 0.75rem; margin: 5px 0 0;
+        font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .stat-card .stat-icon { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+
+    /* ═══ GLASS CARDS ═══ */
     .glass-card {
-        background: rgba(10, 30, 15, 0.7);
-        border: 1px solid rgba(46,204,113,0.15);
-        border-radius: 18px;
-        padding: 1.5rem 1.8rem;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-        margin-bottom: 1rem;
-        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        background: rgba(8,14,26,0.75); border: 1px solid rgba(0,212,255,0.1);
+        border-radius: 16px; padding: 1.5rem 1.8rem; backdrop-filter: blur(16px);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.3); margin-bottom: 1rem;
+        transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; position: relative;
     }
     .glass-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        border-color: rgba(46,204,113,0.3);
+        box-shadow: 0 0 24px rgba(0,212,255,0.08), 0 8px 32px rgba(0,0,0,0.4);
+        border-color: rgba(0,212,255,0.2);
     }
-    .glass-card h4 {
-        font-family: 'Space Grotesk', sans-serif;
-        color: #c8f0d8;
-        font-size: 1rem;
-        font-weight: 600;
-        margin: 0 0 6px;
-    }
-    .glass-card p { color: #7aab8a; font-size: 0.88rem; margin: 0; line-height: 1.5; }
+    .glass-card h4 { font-family: 'Space Grotesk', sans-serif; color: #d0eeff; font-size: 1rem; font-weight: 700; margin: 0 0 6px; }
+    .glass-card p { color: rgba(160,210,240,0.65); font-size: 0.88rem; margin: 0; line-height: 1.55; }
 
-    /* ── Metric / stat cards ── */
-    .stat-card {
-        background: linear-gradient(135deg, rgba(14, 50, 25, 0.9), rgba(20, 80, 40, 0.9));
-        border: 1px solid rgba(46,204,113,0.2);
-        border-radius: 18px;
-        padding: 1.4rem 1.6rem;
-        text-align: center;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
-        margin-bottom: 0.8rem;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
-    .stat-card .stat-value {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 2.2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #2ecc71, #a8e063);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin: 0;
-        line-height: 1.1;
-    }
-    .stat-card .stat-label { color: rgba(200,240,210,0.6); font-size: 0.82rem; margin: 4px 0 0; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
-    .stat-card .stat-icon { font-size: 1.6rem; margin-bottom: 0.5rem; display: block; }
-
-    /* ── Result display card ── */
+    /* ═══ RESULT CARDS ═══ */
     .result-card {
-        border-radius: 16px;
-        padding: 1.4rem 1.8rem;
-        margin: 1rem 0;
-        border-left: 4px solid;
-        backdrop-filter: blur(10px);
+        border-radius: 14px; padding: 1.4rem 1.8rem; margin: 1rem 0;
+        border-left: 3px solid; backdrop-filter: blur(12px);
+        position: relative; overflow: hidden;
     }
-    .result-card.success { background: rgba(46,204,113,0.08); border-left-color: #2ecc71; }
-    .result-card.warning { background: rgba(243,156,18,0.08); border-left-color: #f39c12; }
-    .result-card.danger  { background: rgba(231,76,60,0.08);  border-left-color: #e74c3c; }
-    .result-card.info    { background: rgba(52,152,219,0.08); border-left-color: #3498db; }
-    .result-card.purple  { background: rgba(155,89,182,0.08); border-left-color: #9b59b6; }
+    .result-card.success { background: rgba(0,255,157,0.05); border-left-color: #00ff9d; }
+    .result-card.warning { background: rgba(255,183,0,0.05); border-left-color: #ffb700; }
+    .result-card.danger  { background: rgba(255,56,86,0.05);  border-left-color: #ff3856; }
+    .result-card.info    { background: rgba(0,212,255,0.05);  border-left-color: #00d4ff; }
+    .result-card.purple  { background: rgba(124,58,237,0.05); border-left-color: #7c3aed; }
     .result-card h3 { color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin: 0 0 4px; }
-    .result-card .label { color: rgba(255,255,255,0.5); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-    .result-card .value { font-size: 1.8rem; font-weight: 700; color: #fff; }
+    .result-card .label { color: rgba(180,220,255,0.5); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .result-card .value { font-size: 1.9rem; font-weight: 800; color: #fff; font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
 
-    /* ── Section header ── */
+    /* ═══ SECTION HEADER ═══ */
     .section-header {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #d4f0de;
-        margin: 1.5rem 0 1rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700;
+        color: #c8e8ff; margin: 1.5rem 0 1rem;
+        display: flex; align-items: center; gap: 8px; letter-spacing: -0.01em;
     }
     .section-header::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(90deg, rgba(46,204,113,0.3), transparent);
+        content: ''; flex: 1; height: 1px;
+        background: linear-gradient(90deg, rgba(0,212,255,0.3), transparent);
     }
 
-
-
-    /* ══════════════════════════════════════
-       INPUT STYLING — dark premium
-    ══════════════════════════════════════ */
-    .stTextInput label, .stSelectbox label,
-    .stNumberInput label, .stCheckbox label,
-    [data-testid="stWidgetLabel"] p {
-        color: rgba(200,240,210,0.7) !important;
-        font-size: 0.82rem !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.04em !important;
-        text-transform: uppercase !important;
-        margin-bottom: 6px !important;
+    /* ═══ STATUS BADGE ═══ */
+    .status-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
     }
-    .stTextInput > div > div > input {
-        background-color: rgba(10,30,15,0.8) !important;
-        color: #e8f5ec !important;
-        border: 1.5px solid rgba(46,204,113,0.2) !important;
-        border-radius: 10px !important;
-        padding: 10px 14px !important;
-        font-size: 0.93rem !important;
+    .status-badge.online  { background: rgba(0,255,157,0.1);  color: #00ff9d; border: 1px solid rgba(0,255,157,0.3); }
+    .status-badge.offline { background: rgba(255,56,86,0.1);   color: #ff3856; border: 1px solid rgba(255,56,86,0.3); }
+
+    /* ═══ INPUTS ═══ */
+    .stTextInput label, .stSelectbox label, .stNumberInput label,
+    .stCheckbox label, [data-testid="stWidgetLabel"] p {
+        color: rgba(160,210,240,0.7) !important; font-size: 0.78rem !important;
+        font-weight: 700 !important; letter-spacing: 0.06em !important;
+        text-transform: uppercase !important; margin-bottom: 6px !important;
+    }
+    .stTextInput > div > div > input, .stNumberInput input {
+        background-color: rgba(6,12,22,0.9) !important; color: #e0f4ff !important;
+        border: 1.5px solid rgba(0,212,255,0.15) !important; border-radius: 10px !important;
+        padding: 10px 14px !important; font-size: 0.92rem !important;
         transition: border-color 0.25s, box-shadow 0.25s;
     }
-    .stTextInput > div > div > input:focus {
-        border-color: #2ecc71 !important;
-        box-shadow: 0 0 0 3px rgba(46,204,113,0.12) !important;
+    .stTextInput > div > div > input:focus, .stNumberInput input:focus {
+        border-color: #00d4ff !important; box-shadow: 0 0 0 3px rgba(0,212,255,0.1) !important;
     }
     .stSelectbox > div > div {
-        background-color: rgba(10,30,15,0.8) !important;
-        border: 1.5px solid rgba(46,204,113,0.2) !important;
-        border-radius: 10px !important;
-        color: #e8f5ec !important;
-        transition: border-color 0.25s;
+        background-color: rgba(6,12,22,0.9) !important; border: 1.5px solid rgba(0,212,255,0.15) !important;
+        border-radius: 10px !important; color: #e0f4ff !important; transition: border-color 0.25s;
     }
     .stSelectbox > div > div:focus-within, .stSelectbox > div > div:hover {
-        border-color: #2ecc71 !important;
-        box-shadow: 0 0 0 3px rgba(46,204,113,0.12) !important;
+        border-color: #00d4ff !important; box-shadow: 0 0 0 3px rgba(0,212,255,0.1) !important;
     }
-    .stSelectbox svg { color: #2ecc71 !important; }
+    .stSelectbox svg { color: #00d4ff !important; }
     [data-baseweb="popover"] [data-baseweb="menu"] {
-        background-color: #0a1f0e !important;
-        border: 1px solid rgba(46,204,113,0.2) !important;
-        border-radius: 10px !important;
+        background-color: #080e1a !important; border: 1px solid rgba(0,212,255,0.15) !important;
+        border-radius: 12px !important; box-shadow: 0 20px 40px rgba(0,0,0,0.6) !important;
     }
     [data-baseweb="option"] {
-        background-color: #0a1f0e !important;
-        color: #c8f0d8 !important;
-        padding: 10px 16px !important;
-        font-size: 0.9rem !important;
-        transition: background 0.15s;
+        background-color: #080e1a !important; color: #c0e4ff !important;
+        padding: 10px 16px !important; font-size: 0.9rem !important; transition: background 0.15s;
     }
     [data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
-        background-color: rgba(46,204,113,0.15) !important;
-        color: #ffffff !important;
-    }
-    .stNumberInput input {
-        background-color: rgba(10,30,15,0.8) !important;
-        color: #e8f5ec !important;
-        border: 1.5px solid rgba(46,204,113,0.2) !important;
-        border-radius: 10px !important;
-    }
-    .stNumberInput input:focus {
-        border-color: #2ecc71 !important;
-        box-shadow: 0 0 0 3px rgba(46,204,113,0.12) !important;
+        background-color: rgba(0,212,255,0.1) !important; color: #ffffff !important;
     }
 
-    /* ── Buttons ── */
+    /* ═══ BUTTONS ═══ */
     .stButton > button {
-        background: linear-gradient(135deg, #16a34a, #22c55e) !important;
-        color: #fff !important;
-        border: none !important;
-        border-radius: 10px !important;
-        padding: 0.6rem 1.6rem !important;
-        font-size: 0.93rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.02em;
+        background: linear-gradient(135deg, #0ea5e9, #00d4ff) !important;
+        color: #060a12 !important; border: none !important; border-radius: 10px !important;
+        padding: 0.65rem 1.8rem !important; font-size: 0.92rem !important;
+        font-weight: 800 !important; letter-spacing: 0.03em;
         transition: transform 0.15s, box-shadow 0.15s;
-        box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+        box-shadow: 0 4px 20px rgba(0,212,255,0.35), 0 0 0 1px rgba(0,212,255,0.15);
     }
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(34,197,94,0.45) !important;
+        box-shadow: 0 0 30px rgba(0,212,255,0.5), 0 8px 30px rgba(0,212,255,0.25) !important;
     }
     .stButton > button:active { transform: translateY(0); }
 
-    /* ── Tabs ── */
+    /* ═══ TABS ═══ */
     .stTabs [data-baseweb="tab-list"] {
-        background: rgba(5,20,10,0.6) !important;
-        border-bottom: 1px solid rgba(46,204,113,0.12) !important;
-        gap: 4px;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 4px 4px 0 !important;
+        background: rgba(6,10,18,0.8) !important; border-bottom: 1px solid rgba(0,212,255,0.1) !important;
+        gap: 2px; border-radius: 12px 12px 0 0 !important; padding: 4px 4px 0 !important;
     }
     .stTabs [data-baseweb="tab"] {
-        background: transparent !important;
-        color: rgba(200,240,210,0.5) !important;
-        border-radius: 8px 8px 0 0 !important;
-        padding: 8px 16px !important;
-        font-weight: 600;
-        font-size: 0.87rem;
-        transition: all 0.2s;
+        background: transparent !important; color: rgba(160,210,240,0.5) !important;
+        border-radius: 8px 8px 0 0 !important; padding: 8px 16px !important;
+        font-weight: 600; font-size: 0.85rem; transition: all 0.2s;
     }
     .stTabs [aria-selected="true"] {
-        background: rgba(46,204,113,0.12) !important;
-        color: #2ecc71 !important;
-        border-bottom: 2px solid #2ecc71 !important;
+        background: rgba(0,212,255,0.08) !important; color: #00d4ff !important;
+        border-bottom: 2px solid #00d4ff !important;
     }
     .stTabs [data-baseweb="tab-panel"] {
-        background: rgba(5,20,10,0.5) !important;
-        border: 1px solid rgba(46,204,113,0.1) !important;
-        border-radius: 0 0 14px 14px !important;
-        padding: 1.8rem !important;
-        backdrop-filter: blur(10px);
+        background: rgba(6,10,18,0.7) !important; border: 1px solid rgba(0,212,255,0.08) !important;
+        border-radius: 0 0 14px 14px !important; padding: 1.8rem !important;
+        backdrop-filter: blur(12px);
     }
 
-    /* ── Streamlit alerts override ── */
-    .stSuccess, [data-testid="stNotification"][kind="success"] {
-        background: rgba(46,204,113,0.08) !important;
-        border-left-color: #2ecc71 !important;
-        color: #a8d5b8 !important;
-        border-radius: 10px !important;
-    }
-    .stError, [data-testid="stNotification"][kind="error"] {
-        background: rgba(231,76,60,0.08) !important;
-        border-left-color: #e74c3c !important;
-        color: #f1a1a1 !important;
-        border-radius: 10px !important;
-    }
-    .stWarning, [data-testid="stNotification"][kind="warning"] {
-        background: rgba(243,156,18,0.08) !important;
-        border-left-color: #f39c12 !important;
-        color: #f5c88a !important;
-        border-radius: 10px !important;
-    }
-    .stInfo, [data-testid="stNotification"][kind="info"] {
-        background: rgba(52,152,219,0.08) !important;
-        border-left-color: #3498db !important;
-        color: #a8d0f0 !important;
-        border-radius: 10px !important;
-    }
+    /* ═══ ALERTS ═══ */
+    .stSuccess, [data-testid="stNotification"][kind="success"] { background: rgba(0,255,157,0.06) !important; border-left-color: #00ff9d !important; color: #90eec8 !important; border-radius: 10px !important; }
+    .stError,   [data-testid="stNotification"][kind="error"]   { background: rgba(255,56,86,0.06) !important;  border-left-color: #ff3856 !important; color: #ffa0ae !important; border-radius: 10px !important; }
+    .stWarning, [data-testid="stNotification"][kind="warning"] { background: rgba(255,183,0,0.06) !important;  border-left-color: #ffb700 !important; color: #ffd87a !important; border-radius: 10px !important; }
+    .stInfo,    [data-testid="stNotification"][kind="info"]    { background: rgba(0,212,255,0.06) !important;  border-left-color: #00d4ff !important; color: #8ee4ff !important; border-radius: 10px !important; }
 
-    /* ── Expander ── */
-    .streamlit-expanderHeader {
-        background: rgba(10,30,15,0.7) !important;
-        border-radius: 10px !important;
-        border: 1px solid rgba(46,204,113,0.15) !important;
-        color: #c8f0d8 !important;
-    }
+    /* ═══ MISC ═══ */
+    .streamlit-expanderHeader { background: rgba(6,10,18,0.8) !important; border-radius: 10px !important; border: 1px solid rgba(0,212,255,0.12) !important; color: #c0e4ff !important; }
+    hr { border-color: rgba(0,212,255,0.1) !important; }
+    .stSpinner > div { border-top-color: #00d4ff !important; }
+    .stCheckbox span { color: #c0e4ff !important; }
+    .stCaption { color: rgba(160,210,240,0.5) !important; }
+    .stProgress > div > div { background: linear-gradient(90deg, #00d4ff, #00ff9d) !important; border-radius: 4px !important; }
 
-    /* ── Divider ── */
-    hr { border-color: rgba(46,204,113,0.12) !important; }
-
-    /* ── Spinner ── */
-    .stSpinner > div { border-top-color: #2ecc71 !important; }
-
-    /* ── Checkbox ── */
-    .stCheckbox span { color: #c8f0d8 !important; }
-
-    /* ── Bar chart ── */
-    [data-testid="stVegaLiteChart"] canvas { border-radius: 12px; }
-
-    /* ── Caption text ── */
-    .stCaption { color: rgba(200,240,210,0.5) !important; }
-
-    /* ── Progress bar ── */
-    .stProgress > div > div { background: linear-gradient(90deg, #16a34a, #2ecc71) !important; border-radius: 4px !important; }
-
-    /* ── Forecast row ── */
-    .forecast-row {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 8px;
-        margin-top: 0.5rem;
-    }
+    /* ═══ FORECAST ═══ */
+    .forecast-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-top: 0.5rem; }
     .forecast-day {
-        flex: 1;
-        min-width: 90px;
-        background: rgba(10,30,15,0.7);
-        border: 1px solid rgba(46,204,113,0.15);
-        border-radius: 14px;
-        padding: 0.9rem 0.7rem;
-        text-align: center;
+        flex: 1; min-width: 88px; background: rgba(6,12,22,0.8);
+        border: 1px solid rgba(0,212,255,0.1); border-radius: 14px;
+        padding: 0.9rem 0.7rem; text-align: center; transition: border-color 0.2s, transform 0.2s;
     }
-    .forecast-day .fd-date { font-size: 0.7rem; color: rgba(200,240,210,0.5); text-transform: uppercase; letter-spacing: 0.05em; }
+    .forecast-day:hover { border-color: rgba(0,212,255,0.25); transform: translateY(-2px); }
+    .forecast-day .fd-date { font-size: 0.68rem; color: rgba(160,210,240,0.5); text-transform: uppercase; letter-spacing: 0.06em; }
     .forecast-day .fd-icon { font-size: 1.4rem; margin: 4px 0; }
-    .forecast-day .fd-temp { font-size: 1.1rem; font-weight: 700; color: #d4f0de; }
-    .forecast-day .fd-rain { font-size: 0.75rem; color: #3498db; margin-top: 2px; }
+    .forecast-day .fd-temp { font-size: 1.05rem; font-weight: 700; color: #d0eeff; }
+    .forecast-day .fd-rain { font-size: 0.72rem; color: #00d4ff; margin-top: 2px; }
 
-    /* ── Risk badge ── */
-    .risk-badge {
-        display: inline-block;
-        padding: 6px 18px;
-        border-radius: 20px;
-        font-size: 1rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-    }
-    .risk-low      { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid #2ecc71; }
-    .risk-moderate { background: rgba(243,156,18,0.15); color: #f39c12; border: 1px solid #f39c12; }
-    .risk-high     { background: rgba(231,76,60,0.15);  color: #e74c3c; border: 1px solid #e74c3c; }
-    .risk-extreme  { background: rgba(192,57,43,0.2);   color: #c0392b; border: 1px solid #c0392b; }
+    /* ═══ RISK BADGES ═══ */
+    .risk-badge { display: inline-block; padding: 5px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+    .risk-low      { background: rgba(0,255,157,0.1); color: #00ff9d; border: 1px solid rgba(0,255,157,0.3); }
+    .risk-moderate { background: rgba(255,183,0,0.1); color: #ffb700; border: 1px solid rgba(255,183,0,0.3); }
+    .risk-high     { background: rgba(255,100,0,0.1); color: #ff6400; border: 1px solid rgba(255,100,0,0.3); }
+    .risk-extreme  { background: rgba(255,56,86,0.1); color: #ff3856; border: 1px solid rgba(255,56,86,0.3); }
 
-    /* ── Version tag in sidebar ── */
+    /* ═══ VER TAG ═══ */
     .ver-tag {
-        background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(39,174,96,0.08));
-        border: 1px solid rgba(46,204,113,0.25);
-        border-radius: 8px;
-        padding: 6px 12px;
-        font-size: 0.75rem;
-        color: rgba(200,240,210,0.7);
-        text-align: center;
+        background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(0,255,157,0.05));
+        border: 1px solid rgba(0,212,255,0.15); border-radius: 8px; padding: 6px 12px;
+        font-size: 0.72rem; color: rgba(0,212,255,0.7); text-align: center; font-weight: 600; letter-spacing: 0.05em;
     }
+
+    /* ═══ 3D ANIMATED RESULT CARDS ═══ */
+    @keyframes card3dEntrance {
+        0%   { opacity:0; transform: perspective(900px) rotateX(-20deg) translateY(28px) scale(0.96); }
+        60%  { opacity:1; transform: perspective(900px) rotateX(3deg) translateY(-3px) scale(1.01); }
+        100% { opacity:1; transform: perspective(900px) rotateX(0deg) translateY(0) scale(1); }
+    }
+    @keyframes glowPulse      { 0%,100%{box-shadow:0 0 20px rgba(0,255,157,0.15),0 4px 24px rgba(0,0,0,0.4);} 50%{box-shadow:0 0 40px rgba(0,255,157,0.4),0 8px 40px rgba(0,0,0,0.45);} }
+    @keyframes glowPulseBlue  { 0%,100%{box-shadow:0 0 20px rgba(0,212,255,0.15),0 4px 24px rgba(0,0,0,0.4);} 50%{box-shadow:0 0 40px rgba(0,212,255,0.4),0 8px 40px rgba(0,0,0,0.45);} }
+    @keyframes glowPulseOrange{ 0%,100%{box-shadow:0 0 20px rgba(255,183,0,0.15),0 4px 24px rgba(0,0,0,0.4);} 50%{box-shadow:0 0 40px rgba(255,183,0,0.4),0 8px 40px rgba(0,0,0,0.45);} }
+    @keyframes glowPulseRed   { 0%,100%{box-shadow:0 0 20px rgba(255,56,86,0.15),0 4px 24px rgba(0,0,0,0.4);} 50%{box-shadow:0 0 40px rgba(255,56,86,0.4),0 8px 40px rgba(0,0,0,0.45);} }
+    @keyframes valueCountUp   { from{opacity:0;transform:scale(0.75) translateY(12px);} to{opacity:1;transform:scale(1) translateY(0);} }
+    @keyframes shimmer        { 0%{background-position:-400px 0;} 100%{background-position:400px 0;} }
+    @keyframes particleDrift  { 0%,100%{transform:translateY(0) translateX(0) scale(1);opacity:0.6;} 50%{transform:translateY(-16px) translateX(7px) scale(1.2);opacity:1;} }
+
+    .card3d {
+        animation: card3dEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+        transform-style: preserve-3d; border-radius: 18px; margin: 1rem 0;
+        transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative;
+    }
+    .card3d:hover { transform: perspective(900px) rotateX(-2deg) rotateY(1.5deg) scale(1.015); }
+    .card3d.glow-green  { animation: card3dEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1) both, glowPulse 3s ease-in-out 0.7s infinite; }
+    .card3d.glow-blue   { animation: card3dEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1) both, glowPulseBlue 3s ease-in-out 0.7s infinite; }
+    .card3d.glow-orange { animation: card3dEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1) both, glowPulseOrange 3s ease-in-out 0.7s infinite; }
+    .card3d.glow-red    { animation: card3dEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1) both, glowPulseRed 3s ease-in-out 0.7s infinite; }
+
+    .pred-value-3d {
+        font-family: 'Space Grotesk', sans-serif; font-size: 2.7rem; font-weight: 800;
+        letter-spacing: -0.03em; line-height: 1.05;
+        animation: valueCountUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both; display: block;
+    }
+    .pred-value-3d.green  { background:linear-gradient(135deg,#00ff9d,#00d4ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .pred-value-3d.blue   { background:linear-gradient(135deg,#00d4ff,#7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .pred-value-3d.orange { background:linear-gradient(135deg,#ffb700,#ff6400); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .pred-value-3d.red    { background:linear-gradient(135deg,#ff3856,#ff6b9d); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+    .exact-data-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 8px; margin-top: 1rem; animation: card3dEntrance 0.5s ease 0.45s both;
+    }
+    .exact-data-cell {
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.08);
+        border-radius: 10px; padding: 8px 12px; backdrop-filter: blur(6px);
+        transition: background 0.2s, transform 0.2s, border-color 0.2s;
+    }
+    .exact-data-cell:hover { background: rgba(0,212,255,0.06); transform: translateY(-2px); border-color: rgba(0,212,255,0.2); }
+    .exact-data-cell .edc-label { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(160,210,240,0.4); margin-bottom: 3px; }
+    .exact-data-cell .edc-value { font-size: 0.9rem; font-weight: 700; color: #e0f4ff; font-family: 'JetBrains Mono', monospace; }
+
+    .particle-dot { position: absolute; border-radius: 50%; pointer-events: none; opacity: 0.5; }
+    .pd1 { width:6px; height:6px; background:#00d4ff; top:14%; right:7%;  animation: particleDrift 4s ease-in-out infinite; }
+    .pd2 { width:4px; height:4px; background:#00ff9d; top:58%; right:14%; animation: particleDrift 5s ease-in-out 1s infinite; }
+    .pd3 { width:5px; height:5px; background:#7c3aed; top:38%; right:4%;  animation: particleDrift 3.5s ease-in-out 2s infinite; }
+
+    .shimmer-bar {
+        height: 14px; border-radius: 7px;
+        background: linear-gradient(90deg, rgba(0,212,255,0.06) 25%, rgba(0,212,255,0.18) 50%, rgba(0,212,255,0.06) 75%);
+        background-size: 800px 14px; animation: shimmer 1.6s infinite linear; margin: 4px 0;
+    }
+    .mini-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.68rem; font-weight:700; letter-spacing:0.05em; margin-left:6px; vertical-align:middle; }
+    .mb-green  { background:rgba(0,255,157,0.12); color:#00ff9d; border:1px solid rgba(0,255,157,0.3); }
+    .mb-blue   { background:rgba(0,212,255,0.12); color:#00d4ff; border:1px solid rgba(0,212,255,0.3); }
+    .mb-orange { background:rgba(255,183,0,0.12);  color:#ffb700; border:1px solid rgba(255,183,0,0.3); }
+    .mb-red    { background:rgba(255,56,86,0.12);  color:#ff3856; border:1px solid rgba(255,56,86,0.3); }
+
+    .d3-mini-card {
+        background: rgba(6,10,18,0.9); border: 1px solid rgba(0,212,255,0.1);
+        border-radius: 12px; padding: 1rem 1.1rem; text-align: center;
+        animation: card3dEntrance 0.5s ease both;
+        transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+        position: relative; overflow: hidden;
+    }
+    .d3-mini-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(0,212,255,0.5), rgba(0,255,157,0.3), transparent);
+    }
+    .d3-mini-card:hover { transform: perspective(400px) rotateX(-4deg) scale(1.04); border-color: rgba(0,212,255,0.3); box-shadow: 0 0 20px rgba(0,212,255,0.1); }
+    .d3-mini-card .dmc-val { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 800; color: #00d4ff; display: block; animation: valueCountUp 0.4s ease 0.5s both; letter-spacing: -0.02em; }
+    .d3-mini-card .dmc-lbl { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(160,210,240,0.45); margin-top: 4px; }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------------------------
 # Constants & Direct Service Integration
@@ -680,6 +586,25 @@ def weather_icon(rain: float, temp: float) -> str:
     if temp > 35:  return "☀️"
     if temp > 28:  return "🌤️"
     return "⛅"
+
+def get_crop_icon(crop: str) -> str:
+    if not crop: return "🌱"
+    crop = crop.lower()
+    if "rice" in crop: return "🌾"
+    if "maize" in crop: return "🌽"
+    if "cotton" in crop: return "☁️"
+    if "banana" in crop: return "🍌"
+    if "mango" in crop: return "🥭"
+    if "grape" in crop: return "🍇"
+    if "orange" in crop: return "🍊"
+    if "papaya" in crop: return "🍈"
+    if "pomegranate" in crop: return "🍎"
+    if "coconut" in crop: return "🥥"
+    if "water melon" in crop or "watermelon" in crop: return "🍉"
+    if "melon" in crop: return "🍈"
+    if "bean" in crop: return "🫘"
+    if "gram" in crop or "dal" in crop: return "🥣"
+    return "🌱"
 
 @st.cache_data
 def get_dataset_preview(source_key: str):
@@ -883,8 +808,12 @@ def get_dataset_preview(source_key: str):
 # Sidebar
 # ---------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown('<div class="sidebar-logo">🌾 AgriPredict</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-sub">AI-Powered Farm Intelligence · v4</div>', unsafe_allow_html=True)
+    img_path = os.path.join(os.path.dirname(__file__), "agri_banner.png")
+    if os.path.exists(img_path):
+        st.image(img_path, use_container_width=True)
+    st.markdown('<div class="sidebar-logo">⬡ AgriPredict AI</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-sub">IIT Research Edition · v4.0</div>', unsafe_allow_html=True)
+    st.markdown('<div class="iit-badge">🎓 Research-Grade ML Platform</div>', unsafe_allow_html=True)
     st.divider()
 
     page = st.radio(
@@ -896,12 +825,12 @@ with st.sidebar:
 
     is_online, status_text = check_backend_status()
     if is_online:
-        st.markdown(f'<div class="status-badge online">🟢 Backend {status_text}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="status-badge online">● Online  {status_text}</div>', unsafe_allow_html=True)
     else:
-        st.markdown(f'<div class="status-badge offline">🔴 Backend {status_text}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="status-badge offline">● Offline  {status_text}</div>', unsafe_allow_html=True)
 
     st.markdown("<br/>", unsafe_allow_html=True)
-    st.markdown('<div class="ver-tag">Version 4.0 · Telangana & AP<br/>© 2024 AgriPredict AI</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ver-tag">v4.0 · Telangana &amp; AP · 57 Districts<br/>Precision Agriculture · ML Research</div>', unsafe_allow_html=True)
 
 
 # ===========================================================================
@@ -911,15 +840,16 @@ if page == "🏠  Dashboard":
 
     st.markdown("""
     <div class="hero-v4">
-        <div class="badge">🚀 Version 4.0 — Advanced AI Edition</div>
-        <h1>India's Smartest<br/><span>Agriculture Platform</span></h1>
-        <p>Real-time climate · AI crop intelligence · Market forecasting — all in one unified dashboard.</p>
+        <div class="badge">🎓 IIT Research Edition · v4.0</div>
+        <h1>AgriPredict <span>AI</span><br/>Research Platform</h1>
+        <p>Precision agriculture powered by FAO-56, ML ensemble models &amp; real-time data — built for Telangana &amp; Andhra Pradesh.</p>
         <div class="hero-chips">
-            <span class="chip">🌦️ Climate Risk</span>
-            <span class="chip">🌱 Yield Prediction</span>
-            <span class="chip">💧 Irrigation</span>
-            <span class="chip">🌾 Crop AI</span>
-            <span class="chip">💰 Market Price</span>
+            <span class="chip">🌦️ Climate Risk Assessment</span>
+            <span class="chip">🌱 Yield Estimation</span>
+            <span class="chip">💧 FAO-56 Irrigation</span>
+            <span class="chip">🌾 Crop Recommendation</span>
+            <span class="chip">💰 Mandi Forecasting</span>
+            <span class="chip">📊 57 Districts</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1288,7 +1218,7 @@ elif page == "🔬  Predictions":
             st.markdown(f"""
             <div class="result-card success">
                 <div class="label">Best Crop for {location}</div>
-                <div class="value">🌾 {rec_crop.title()}</div>
+                <div class="value">{get_crop_icon(rec_crop)} {rec_crop.title()}</div>
                 <div style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:6px;">
                     📅 {result.get('date', '')} &nbsp;·&nbsp; AI Confidence Model
                 </div>
@@ -1302,7 +1232,7 @@ elif page == "🔬  Predictions":
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div>
                             <span style="font-size:0.8rem; color:rgba(255,255,255,0.6);">Preferred Crop Evaluation</span>
-                            <h4 style="margin:2px 0 0; color:#3498db; font-size:1.05rem; font-weight:700;">🌱 {t_eval['requested_crop'].title()}</h4>
+                            <h4 style="margin:2px 0 0; color:#3498db; font-size:1.05rem; font-weight:700;">{get_crop_icon(t_eval['requested_crop'])} {t_eval['requested_crop'].title()}</h4>
                         </div>
                         <div style="text-align:right;">
                             <span style="background:rgba(52,152,219,0.2); color:#3498db; padding:4px 10px; border-radius:16px; font-weight:700; font-size:0.75rem; border:1px solid rgba(52,152,219,0.4);">
@@ -1317,10 +1247,11 @@ elif page == "🔬  Predictions":
                 """, unsafe_allow_html=True)
 
             if result.get("top_5"):
-                st.markdown("**Top 5 Candidates:**")
+                st.markdown('<div class="section-header" style="margin: 1.2rem 0 0.8rem;">🌾 Top 5 Crops</div>', unsafe_allow_html=True)
                 for i, c in enumerate(result["top_5"], 1):
                     pct = c["confidence"] * 100
-                    st.progress(int(pct), text=f"{i}. {c['crop'].title()} — {pct:.1f}%")
+                    st.markdown(f'<div style="font-size: 1.1rem; font-weight: 600; color: #d4f0de; margin: 0.7rem 0 0.25rem;">{i}. {get_crop_icon(c["crop"])} {c["crop"].title()} — <span style="color: #2ecc71; font-weight: 700;">{pct:.1f}%</span></div>', unsafe_allow_html=True)
+                    st.progress(int(pct))
 
             with st.expander("📋 Inputs used for prediction"):
                 st.json(result.get("inputs_used", {}))
@@ -1394,18 +1325,80 @@ elif page == "🔬  Predictions":
                     st.error(error)
                 else:
                     risk = result["climate_risk"]
+                    glow_map = {"low":"glow-green","moderate":"glow-orange","high":"glow-red","extreme":"glow-red"}
+                    glow_cls = glow_map.get(risk.lower(), "glow-green")
                     color_c = {"low":"success","moderate":"warning","high":"danger","extreme":"danger"}.get(risk.lower(),"info")
+                    probs = result.get("probabilities", {})
+                    ordered_keys = ["low", "moderate", "high", "extreme"]
+                    # build probability badges
+                    prob_html = " &nbsp; ".join([
+                        f'<span class="mini-badge mb-{"green" if k=="low" else "orange" if k=="moderate" else "red"}">{k.upper()} {probs.get(k,0)*100:.1f}%</span>'
+                        for k in ordered_keys
+                    ])
+                    # inputs / weather details
+                    inp = result.get("inputs_used") or result.get("weather") or {}
+                    temp_val  = inp.get("temperature_2m") or inp.get("temperature") or inp.get("temp")
+                    hum_val   = inp.get("relative_humidity_2m") or inp.get("humidity")
+                    rain_val  = inp.get("precipitation") or inp.get("rainfall") or inp.get("rain")
+                    wind_val  = inp.get("wind_speed_10m") or inp.get("wind_speed")
+                    et0_val   = inp.get("et0_fao_evapotranspiration") or inp.get("ET0")
+                    soil_ph   = inp.get("Soil_pH") or inp.get("soil_ph")
+                    soil_mois = inp.get("Soil_Moisture") or inp.get("soil_moisture")
+                    soil_temp = inp.get("Soil_Temperature") or inp.get("soil_temp")
+                    cloud_val = inp.get("cloud_cover")
+                    pressure  = inp.get("surface_pressure")
+                    org_c     = inp.get("Organic_Carbon") or inp.get("organic_carbon")
+
+                    def _fmt(v, decimals=2, suffix=""):
+                        if v is None: return "—"
+                        try: return f"{float(v):.{decimals}f}{suffix}"
+                        except: return str(v)
+
+                    exact_cells = []
+                    if temp_val  is not None: exact_cells.append(("🌡️ Temperature",   _fmt(temp_val,2," °C")))
+                    if hum_val   is not None: exact_cells.append(("💧 Humidity",       _fmt(hum_val,1," %")))
+                    if rain_val  is not None: exact_cells.append(("🌧️ Precipitation",  _fmt(rain_val,2," mm")))
+                    if wind_val  is not None: exact_cells.append(("💨 Wind Speed",     _fmt(wind_val,2," km/h")))
+                    if et0_val   is not None: exact_cells.append(("🌿 ET₀",            _fmt(et0_val,3," mm/d")))
+                    if soil_ph   is not None: exact_cells.append(("🧪 Soil pH",        _fmt(soil_ph,2)))
+                    if soil_mois is not None: exact_cells.append(("💦 Soil Moisture",  _fmt(soil_mois,4," m³/m³")))
+                    if soil_temp is not None: exact_cells.append(("🌡️ Soil Temp",      _fmt(soil_temp,2," °C")))
+                    if cloud_val is not None: exact_cells.append(("☁️ Cloud Cover",    _fmt(cloud_val,1," %")))
+                    if pressure  is not None: exact_cells.append(("📊 Pressure",       _fmt(pressure,2," hPa")))
+                    if org_c     is not None: exact_cells.append(("🌱 Organic C",      _fmt(org_c,3," %")))
+                    for k in ordered_keys:
+                        exact_cells.append((f"📊 P({k.upper()})", f"{probs.get(k,0)*100:.2f}%"))
+
+                    exact_html = "".join([
+                        f'<div class="exact-data-cell"><div class="edc-label">{lbl}</div><div class="edc-value">{val}</div></div>'
+                        for lbl, val in exact_cells
+                    ])
+
                     st.markdown(f"""
-                    <div class="result-card {color_c}">
-                        <div class="label">Risk Level for {crop} in {location}</div>
-                        <div class="value"><span class="risk-badge risk-{risk.lower()}">{risk.upper()}</span></div>
-                        <div style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:8px;">
+                    <div class="card3d {glow_cls}" style="background:linear-gradient(135deg,rgba(10,30,15,0.9),rgba(20,60,30,0.85));border:1px solid rgba(46,204,113,0.2);padding:1.6rem 2rem;position:relative;overflow:hidden;">
+                        <div class="particle-dot pd1"></div>
+                        <div class="particle-dot pd2"></div>
+                        <div class="particle-dot pd3"></div>
+                        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(200,240,210,0.45);margin-bottom:6px;">
+                            🌦️ CLIMATE RISK — {crop.upper()} · {location.upper()}
+                        </div>
+                        <span class="pred-value-3d {'green' if risk.lower()=='low' else 'orange' if risk.lower()=='moderate' else 'red'}">
+                            {risk.upper()}
+                        </span>
+                        <div style="margin-top:10px;">{prob_html}</div>
+                        <div style="font-size:0.78rem;color:rgba(255,255,255,0.38);margin-top:8px;">
                             📅 {result.get('date','')} &nbsp;·&nbsp; 🌤️ {result.get('season','')} season
                         </div>
+                        <div class="exact-data-grid">{exact_html}</div>
                     </div>
                     """, unsafe_allow_html=True)
-                    st.markdown("**Confidence Breakdown:**")
-                    st.bar_chart(result["probabilities"])
+
+                    st.markdown("**📊 Confidence Breakdown (exact):**")
+                    df_chart = pd.DataFrame({
+                        "Risk Level": ordered_keys,
+                        "Confidence (%)" : [round(probs.get(k, 0.0)*100, 4) for k in ordered_keys]
+                    })
+                    st.bar_chart(df_chart, x="Risk Level", y="Confidence (%)", sort=False)
 
     # ── Tab 3: Irrigation ─────────────────────────────────────────────────────
     with tab3:
@@ -1432,26 +1425,67 @@ elif page == "🔬  Predictions":
                     val = result.get("predicted_water_requirement_mm_per_day", "?")
                     src = result.get("model_source", "")
                     src_tag = "🔬 FAO-56 Penman-Monteith" if "fao" in src else ("🤖 ML Model" if "pickle" in src else "")
+                    details = result.get("details", {})
+
+                    def _fmtd(v, d=3, sfx=""):
+                        if v is None or v == "?": return "—"
+                        try: return f"{float(v):.{d}f}{sfx}"
+                        except: return str(v)
+
+                    et0_v  = details.get('ET0_mm_day')
+                    kc_v   = details.get('Kc')
+                    etc_v  = details.get('ETc_mm_day')
+                    rain_v = details.get('effective_rain')
+                    gross  = details.get('gross_irrigation') or details.get('gross_irr')
+                    peff   = details.get('precipitation_efficiency') or details.get('rain_efficiency')
+                    deficit= details.get('soil_water_deficit') or details.get('deficit')
+                    ddays  = details.get('duration_days') or details.get('days')
+
+                    exact_cells_irr = [
+                        ("💧 Req (mm/day)",   _fmtd(val, 4)),
+                        ("🌿 ET₀ (mm/day)",   _fmtd(et0_v, 4)),
+                        ("🌱 Kc Coefficient",  _fmtd(kc_v, 4)),
+                        ("🔁 ETc (mm/day)",    _fmtd(etc_v, 4)),
+                        ("🌧️ Eff. Rain (mm)", _fmtd(rain_v, 3)),
+                    ]
+                    if gross   is not None: exact_cells_irr.append(("📦 Gross Irr.",  _fmtd(gross, 3, " mm")))
+                    if peff    is not None: exact_cells_irr.append(("⚡ Rain Eff.",    _fmtd(peff, 4)))
+                    if deficit is not None: exact_cells_irr.append(("🔻 Soil Deficit", _fmtd(deficit, 3, " mm")))
+                    if ddays   is not None: exact_cells_irr.append(("📅 Duration",     f"{ddays} days"))
+
+                    extra_html = "".join([
+                        f'<div class="exact-data-cell"><div class="edc-label">{lb}</div><div class="edc-value" style="color:#74b9ff;">{vv}</div></div>'
+                        for lb, vv in exact_cells_irr
+                    ])
+
                     st.markdown(f"""
-                    <div class="result-card info">
-                        <div class="label">Daily Water Requirement — {crop} ({growth_stage} Stage)</div>
-                        <div class="value">💧 {val} mm/day</div>
-                        <div style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:8px;">
+                    <div class="card3d glow-blue" style="background:linear-gradient(135deg,rgba(8,22,45,0.9),rgba(15,40,80,0.85));border:1px solid rgba(52,152,219,0.25);padding:1.6rem 2rem;position:relative;overflow:hidden;">
+                        <div class="particle-dot pd1" style="background:#3498db;"></div>
+                        <div class="particle-dot pd2" style="background:#74b9ff;"></div>
+                        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(116,185,255,0.55);margin-bottom:6px;">
+                            💧 IRRIGATION — {crop.upper()} · {growth_stage.upper()} STAGE
+                        </div>
+                        <span class="pred-value-3d blue">
+                            {_fmtd(val, 4)} <span style="font-size:1.1rem;font-weight:500;">mm/day</span>
+                        </span>
+                        <div style="font-size:0.78rem;color:rgba(255,255,255,0.38);margin-top:8px;">
                             📍 {result.get('location', location)} &nbsp;·&nbsp; 📅 {result.get('date','')} &nbsp;·&nbsp; {src_tag}
                         </div>
+                        <div class="exact-data-grid">{extra_html}</div>
                     </div>
                     """, unsafe_allow_html=True)
-                    details = result.get("details", {})
+
                     if details:
+                        st.markdown("**🔬 Exact Breakdown:**")
                         dc1, dc2, dc3, dc4 = st.columns(4)
                         for col, (lbl, val2) in zip([dc1,dc2,dc3,dc4], [
-                            ("ET₀", f"{details.get('ET0_mm_day','?')} mm/day"),
-                            ("Kc (Crop coeff.)", details.get('Kc','?')),
-                            ("ETc (Crop ET)", f"{details.get('ETc_mm_day','?')} mm/day"),
-                            ("Effective Rain", f"{details.get('effective_rain','?')} mm"),
+                            ("ET₀",             f"{_fmtd(et0_v, 4)} mm/day"),
+                            ("Kc (Crop coeff.)", _fmtd(kc_v, 5)),
+                            ("ETc (Crop ET)",    f"{_fmtd(etc_v, 4)} mm/day"),
+                            ("Effective Rain",   f"{_fmtd(rain_v, 3)} mm"),
                         ]):
                             with col:
-                                st.markdown(f'<div class="result-card info" style="padding:0.7rem;"><div class="label" style="font-size:0.7rem;">{lbl}</div><div style="color:#fff;font-weight:700;font-size:0.9rem;">{val2}</div></div>', unsafe_allow_html=True)
+                                st.markdown(f'<div class="d3-mini-card"><span class="dmc-val" style="color:#74b9ff;">{val2}</span><div class="dmc-lbl">{lbl}</div></div>', unsafe_allow_html=True)
 
     # ── Tab 4: Yield ──────────────────────────────────────────────────────────
     with tab4:
@@ -1480,30 +1514,72 @@ elif page == "🔬  Predictions":
                     season = result.get("season", "")
                     src    = result.get("model_source", "")
                     src_tag = "📐 FAO Crop Yield Model" if "fao" in src else ("🤖 ML Model" if "pickle" in src else "")
+                    factors = result.get("factors", {})
+
+                    def _fmty(v, d=4, sfx=""):
+                        if v is None or v == "?": return "—"
+                        try: return f"{float(v):.{d}f}{sfx}"
+                        except: return str(v)
+
+                    tf  = factors.get('temperature_factor')
+                    wsf = factors.get('water_stress_factor')
+                    sfi = factors.get('soil_fertility_index')
+                    sf  = factors.get('solar_factor')
+                    pmax= factors.get('potential_yield_max') or factors.get('Yp')
+                    ky  = factors.get('Ky') or factors.get('yield_response_factor')
+
+                    yield_cells = [
+                        ("🌾 Total Yield",    _fmty(val, 4, " t")),
+                        ("📐 Yield / ha",      _fmty(val_ha, 4, " t/ha")),
+                        ("🌡️ Temp Factor",    _fmty(tf, 5)),
+                        ("💧 Water Stress",    _fmty(wsf, 5)),
+                        ("🌱 Soil Fertility",  _fmty(sfi, 5)),
+                        ("☀️ Solar Factor",   _fmty(sf, 5)),
+                    ]
+                    if pmax is not None: yield_cells.append(("📊 Potential Ymax", _fmty(pmax, 4, " t/ha")))
+                    if ky   is not None: yield_cells.append(("⚙️ Ky Factor",     _fmty(ky, 4)))
+
+                    yield_html = "".join([
+                        f'<div class="exact-data-cell"><div class="edc-label">{lb}</div><div class="edc-value" style="color:#a8e063;">{vv}</div></div>'
+                        for lb, vv in yield_cells
+                    ])
+
                     st.markdown(f"""
-                    <div class="result-card success">
-                        <div class="label">Predicted Yield — {crop} on {area} ha</div>
-                        <div class="value">🌾 {val} tonnes</div>
-                        <div style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:8px;">
-                            📍 {result.get('location', location)} &nbsp;·&nbsp; 🌤️ {season} season &nbsp;·&nbsp;
-                            {f'📐 {val_ha} t/ha &nbsp;·&nbsp;' if val_ha else ''} {src_tag}
+                    <div class="card3d glow-green" style="background:linear-gradient(135deg,rgba(8,25,12,0.9),rgba(15,50,25,0.85));border:1px solid rgba(46,204,113,0.25);padding:1.6rem 2rem;position:relative;overflow:hidden;">
+                        <div class="particle-dot pd1"></div>
+                        <div class="particle-dot pd2"></div>
+                        <div class="particle-dot pd3"></div>
+                        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(168,224,99,0.55);margin-bottom:6px;">
+                            🌱 YIELD ESTIMATION — {get_crop_icon(crop)} {crop.upper()} · {area} HA
                         </div>
+                        <span class="pred-value-3d green">
+                            {_fmty(val, 4)} <span style="font-size:1.1rem;font-weight:500;">tonnes</span>
+                        </span>
+                        {f'<div style="font-size:1rem;color:rgba(168,224,99,0.7);margin-top:4px;">📐 {_fmty(val_ha,4)} t/ha</div>' if val_ha else ''}
+                        <div style="font-size:0.78rem;color:rgba(255,255,255,0.38);margin-top:8px;">
+                            📍 {result.get('location', location)} &nbsp;·&nbsp; 🌤️ {season} season &nbsp;·&nbsp; {src_tag}
+                        </div>
+                        <div class="exact-data-grid">{yield_html}</div>
                     </div>
                     """, unsafe_allow_html=True)
-                    factors = result.get("factors", {})
+
                     if factors:
-                        st.markdown("**🔬 Yield Factor Breakdown (FAO model):**")
+                        st.markdown("**🔬 Exact Yield Factor Breakdown:**")
                         fc1, fc2, fc3, fc4 = st.columns(4)
                         factor_info = [
-                            ("🌡️ Temperature", factors.get('temperature_factor','?'), "How close temp is to crop optimum"),
-                            ("💧 Water Stress", factors.get('water_stress_factor','?'), "FAO-33 ETa/ETc ratio"),
-                            ("🌱 Soil Fertility", factors.get('soil_fertility_index','?'), "NPK, pH & organic carbon score"),
-                            ("☀️ Solar Efficiency", factors.get('solar_factor','?'), "Radiation use efficiency"),
+                            ("🌡️ Temperature Factor",  tf,  "How close temp is to crop optimum"),
+                            ("💧 Water Stress Factor",  wsf, "FAO-33 ETa/ETc ratio"),
+                            ("🌱 Soil Fertility Index", sfi, "NPK, pH & organic carbon score"),
+                            ("☀️ Solar Efficiency",    sf,  "Radiation use efficiency"),
                         ]
                         for col, (lbl, fval, tip) in zip([fc1,fc2,fc3,fc4], factor_info):
-                            pct = int(float(fval)*100) if fval != '?' else 0
+                            try:
+                                pct_raw = float(fval) * 100
+                                display = f"{pct_raw:.2f}%  ({float(fval):.5f})"
+                            except:
+                                display = "—"
                             with col:
-                                st.markdown(f'<div class="result-card success" style="padding:0.7rem;"><div class="label" style="font-size:0.7rem;">{lbl}</div><div style="color:#2ecc71;font-weight:700;font-size:0.9rem;">{pct}%</div></div>', unsafe_allow_html=True)
+                                st.markdown(f'<div class="d3-mini-card"><span class="dmc-val" style="color:#a8e063;">{display}</span><div class="dmc-lbl">{lbl}</div></div>', unsafe_allow_html=True)
 
     # ── Tab 5: Market Price ───────────────────────────────────────────────────
     with tab5:
@@ -1534,28 +1610,73 @@ elif page == "🔬  Predictions":
                     else:
                         src    = result.get("model_source", "")
                         src_tag = "📈 APMC Calibrated" if "apmc" in src else ("🤖 ML Model" if "pickle" in src else "")
+                        pf = result.get("price_factors", {})
+
+                        def _fmtm(v, d=2, pfx="", sfx=""):
+                            if v is None or v == "?": return "—"
+                            try: return f"{pfx}{float(v):.{d}f}{sfx}"
+                            except: return str(v)
+
+                        base_p  = pf.get('base_price_2023')
+                        seas_m  = pf.get('seasonal_multiplier')
+                        dist_p  = pf.get('district_premium')
+                        infl_f  = pf.get('inflation_factor')
+                        min_p   = pf.get('min_price') or result.get('min_price')
+                        max_p   = pf.get('max_price') or result.get('max_price')
+                        modal_p = pf.get('modal_price') or result.get('modal_price')
+                        total_v = result.get('total_value') or (float(price)*float(qty) if price and qty else None)
+
+                        mkt_cells = [
+                            ("💰 Price /quintal",   _fmtm(price, 2, "₹")),
+                            ("📊 Base Price 2023",   _fmtm(base_p, 2, "₹")),
+                            ("📅 Seasonal Mult.",    _fmtm(seas_m, 5, "×")),
+                            ("🏙️ District Prem.",   _fmtm(dist_p, 5, "×")),
+                            ("📈 Inflation Factor",  _fmtm(infl_f, 5, "×")),
+                            ("📦 Arrival Qty",       f"{qty:.1f} qt"),
+                        ]
+                        if min_p   is not None: mkt_cells.append(("📉 Min Price",   _fmtm(min_p, 2, "₹")))
+                        if max_p   is not None: mkt_cells.append(("📈 Max Price",   _fmtm(max_p, 2, "₹")))
+                        if modal_p is not None: mkt_cells.append(("🎯 Modal Price", _fmtm(modal_p, 2, "₹")))
+                        if total_v is not None: mkt_cells.append(("💵 Total Value",  _fmtm(total_v, 2, "₹")))
+
+                        mkt_html = "".join([
+                            f'<div class="exact-data-cell"><div class="edc-label">{lb}</div><div class="edc-value" style="color:#fdcb6e;">{vv}</div></div>'
+                            for lb, vv in mkt_cells
+                        ])
+
+                        try:
+                            price_display = f"{float(price):.2f}"
+                        except:
+                            price_display = str(price)
+
                         st.markdown(f"""
-                        <div class="result-card warning">
-                            <div class="label">Predicted Mandi Price — {commodity} in {location}</div>
-                            <div class="value">₹ {price} <span style="font-size:1rem;color:rgba(255,255,255,0.5);">/quintal</span></div>
-                            <div style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:8px;">
-                                📦 Arrival qty: {qty} quintals &nbsp;·&nbsp; 📅 {result.get('date','')} &nbsp;·&nbsp; {src_tag}
+                        <div class="card3d glow-orange" style="background:linear-gradient(135deg,rgba(25,18,5,0.9),rgba(55,35,8,0.85));border:1px solid rgba(243,156,18,0.25);padding:1.6rem 2rem;position:relative;overflow:hidden;">
+                            <div class="particle-dot pd1" style="background:#f39c12;"></div>
+                            <div class="particle-dot pd2" style="background:#fdcb6e;"></div>
+                            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(253,203,110,0.55);margin-bottom:6px;">
+                                💰 MANDI PRICE — {commodity.upper()} · {location.upper()}
                             </div>
+                            <span class="pred-value-3d orange">
+                                ₹ {price_display} <span style="font-size:1.1rem;font-weight:500;">/quintal</span>
+                            </span>
+                            <div style="font-size:0.78rem;color:rgba(255,255,255,0.38);margin-top:8px;">
+                                📦 {qty} quintals &nbsp;·&nbsp; 📅 {result.get('date','')} &nbsp;·&nbsp; {src_tag}
+                            </div>
+                            <div class="exact-data-grid">{mkt_html}</div>
                         </div>
                         """, unsafe_allow_html=True)
-                        pf = result.get("price_factors", {})
+
                         if pf:
-                            st.markdown("**📊 Price Factor Breakdown:**")
+                            st.markdown("**📊 Exact Price Factor Breakdown:**")
                             pfc1, pfc2, pfc3, pfc4 = st.columns(4)
                             for col, (lbl, val2) in zip([pfc1,pfc2,pfc3,pfc4], [
-                                ("📊 Base Price (2023)", f"₹{pf.get('base_price_2023','?')}"),
-                                ("📅 Seasonal Multiplier", f"×{pf.get('seasonal_multiplier','?')}"),
-                                ("🏙️ District Premium", f"×{pf.get('district_premium','?')}"),
-                                ("📈 Inflation Factor", f"×{pf.get('inflation_factor','?')}"),
+                                ("📊 Base Price (2023)",   _fmtm(base_p, 2, "₹")),
+                                ("📅 Seasonal Multiplier", _fmtm(seas_m, 5, "×")),
+                                ("🏙️ District Premium",   _fmtm(dist_p, 5, "×")),
+                                ("📈 Inflation Factor",    _fmtm(infl_f, 5, "×")),
                             ]):
                                 with col:
-                                    st.markdown(f'<div class="result-card warning" style="padding:0.7rem;"><div class="label" style="font-size:0.7rem;">{lbl}</div><div style="color:#f39c12;font-weight:700;font-size:0.9rem;">{val2}</div></div>', unsafe_allow_html=True)
-
+                                    st.markdown(f'<div class="d3-mini-card"><span class="dmc-val" style="color:#fdcb6e;">{val2}</span><div class="dmc-lbl">{lbl}</div></div>', unsafe_allow_html=True)
 
 # ===========================================================================
 # PAGE 4 — COVERAGE MAP

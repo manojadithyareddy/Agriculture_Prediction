@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: agripredict-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "cd APP/Backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: SUPABASE_URL
+        value: https://xenrnczedenmvljzlbin.supabase.co
+      - key: SUPABASE_KEY
+        value: sb_publishable_BkmeBl1mAwJl6uQDOctAPw_gtrQwkC-

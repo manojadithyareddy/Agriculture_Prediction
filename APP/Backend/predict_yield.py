@@ -158,12 +158,25 @@ def predict_yield(location: str, crop: str, area: float = 1.0) -> dict:
             df = pd.concat([df.reset_index(drop=True), enc_df], axis=1)
             df = df.reindex(columns=FEATURE_ORDER, fill_value=0)
             prediction = float(model.predict(df)[0])
-            return {
+            res = {
                 "location": w["location"], "date": w["date"], "crop": crop,
                 "season": season, "area": area,
                 "predicted_yield": round(prediction * area, 2),
                 "model_source": "pickle",
             }
+            try:
+                from database import save_prediction_to_supabase
+                save_prediction_to_supabase(
+                    prediction_type="yield",
+                    location=res["location"],
+                    crop=crop,
+                    inputs={"location": location, "crop": crop, "area": area},
+                    results={"predicted_yield": res["predicted_yield"]},
+                    model_source="pickle"
+                )
+            except Exception:
+                pass
+            return res
         except Exception:
             pass  # fall through to fallback
 
@@ -187,7 +200,7 @@ def predict_yield(location: str, crop: str, area: float = 1.0) -> dict:
     yield_per_ha = round(Ym * Tf * Wf * Sf * Rf * season_correction, 2)
     total_yield  = round(yield_per_ha * area, 2)
 
-    return {
+    res = {
         "location": w["location"], "date": w["date"],
         "crop": crop, "season": season, "area": area,
         "predicted_yield": total_yield,
@@ -200,3 +213,16 @@ def predict_yield(location: str, crop: str, area: float = 1.0) -> dict:
             "solar_factor": round(Rf, 3),
         },
     }
+    try:
+        from database import save_prediction_to_supabase
+        save_prediction_to_supabase(
+            prediction_type="yield",
+            location=res["location"],
+            crop=crop,
+            inputs={"location": location, "crop": crop, "area": area},
+            results={"predicted_yield": total_yield, "yield_per_ha": yield_per_ha},
+            model_source="fao_fallback"
+        )
+    except Exception:
+        pass
+    return res

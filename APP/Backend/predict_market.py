@@ -172,12 +172,25 @@ def predict_price(location: str, commodity: str, arrival_quantity: float = None)
                 }])
                 row = row[list(model.feature_names_in_)]
                 prediction = float(model.predict(row)[0])
-                return {
+                res = {
                     "location": location, "date": today.isoformat(), "commodity": commodity,
                     "arrival_quantity": qty,
                     "predicted_price_per_quintal": round(prediction, 2),
                     "model_source": "pickle",
                 }
+                try:
+                    from database import save_prediction_to_supabase
+                    save_prediction_to_supabase(
+                        prediction_type="market_price",
+                        location=location,
+                        crop=commodity,
+                        inputs={"location": location, "commodity": commodity, "arrival_quantity": qty},
+                        results={"predicted_price_per_quintal": res["predicted_price_per_quintal"]},
+                        model_source="pickle"
+                    )
+                except Exception:
+                    pass
+                return res
         except Exception:
             pass
 
@@ -200,7 +213,7 @@ def predict_price(location: str, commodity: str, arrival_quantity: float = None)
 
     final_price = round(elastic_price * seasonal_mult * dist_mult * inflation, 2)
 
-    return {
+    res = {
         "location": location,
         "date": today.isoformat(),
         "commodity": commodity,
@@ -214,3 +227,16 @@ def predict_price(location: str, commodity: str, arrival_quantity: float = None)
             "inflation_factor": round(inflation, 3),
         },
     }
+    try:
+        from database import save_prediction_to_supabase
+        save_prediction_to_supabase(
+            prediction_type="market_price",
+            location=location,
+            crop=commodity,
+            inputs={"location": location, "commodity": commodity, "arrival_quantity": qty},
+            results={"predicted_price_per_quintal": final_price},
+            model_source="calibrated_apmc_fallback"
+        )
+    except Exception:
+        pass
+    return res

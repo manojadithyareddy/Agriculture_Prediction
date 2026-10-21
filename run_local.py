@@ -4,6 +4,8 @@ import time
 import os
 
 def main():
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
     print("==================================================")
     print("🌾 Starting AgriPredict AI Full-Stack System...")
     print("==================================================")

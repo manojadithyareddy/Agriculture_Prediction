@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local temp and large archives
+agriculture.zip
+*.zip
+agriculture_db/
+detection_output.png
+
